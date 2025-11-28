@@ -10,6 +10,11 @@
 
 - use GitHub CLI (gh) when interacting with github repository, pull request or GitHub gist. 
 
+## Init Mode /init
+
+- Try to generate a mermaid graph to connect all the resources involed in the scope you are intializing for
+- Update root README with a brief and concise verion of the understanding
+
 ## Plan Mode
 
 - YOU MUST start planning with a markdown file in /tmp directory, keep a running record the plan as the conversation goes. Show link to access the tmp plan file at the end of each message
