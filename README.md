@@ -10,9 +10,3 @@ stow -t ~ .
 ```
 
 Stow creates symlinks, not copies. Changes are instant. Re-run `stow` only when adding new files.
-
-## Custom Commands
-
-| Command | Description |
-|---------|-------------|
-| `/export-logfile [description]` | Export conversation to `.claude/logs/YYYY-MM-DD-[description].txt` |
