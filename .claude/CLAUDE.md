@@ -30,6 +30,13 @@
 - YOU MUST always make sure the code can build without error
 - once I'm happy update the workspace CLAUDE.md to capture any new high-level information
 
+## Pull Request (PR)
+
+- Reference pull request template when creating a pr
+- Do not check off any check boxes
+- Use concise and easy to understand language for a developer when writing the pr
+
+
 ## Resources
 
 - [Claude Memory Management](https://code.claude.com/docs/en/memory)
