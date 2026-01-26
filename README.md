@@ -46,6 +46,7 @@ mkdir -p ~/.claude/plugins ~/.claude/skills
 ln -sf ~/git/norriswu/dotfile/.claude/plugins/installed_plugins.json ~/.claude/plugins/
 ln -sf ~/git/norriswu/dotfile/.claude/plugins/known_marketplaces.json ~/.claude/plugins/
 ln -sf ~/git/norriswu/dotfile/.claude/skills/document ~/.claude/skills/
+ln -sf ~/git/norriswu/dotfile/.claude/skills/skill-research ~/.claude/skills/
 ```
 
 Plugin cache auto-downloads on restart - only config files tracked.
@@ -56,3 +57,8 @@ Plugin cache auto-downloads on restart - only config files tracked.
   - Question headings, concise + educational
   - 5 min read target, splits if longer
   - Suggests documentation after significant edits
+- `skill-research` - Evaluate skills before installing via `/skill-research <topic>`
+  - Searches GitHub first, then web
+  - Checks stars, forks, activity, author
+  - Trust score based on metrics
+  - Detailed report on request
