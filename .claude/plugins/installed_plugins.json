@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "plugins": {
+    "superpowers@claude-plugins-official": [
+      {
+        "scope": "local",
+        "projectPath": "/home/norris/git/norriswu/dotfile",
+        "installPath": "/home/norris/.claude/plugins/cache/claude-plugins-official/superpowers/4.1.1",
+        "version": "4.1.1",
+        "installedAt": "2026-01-25T23:22:20.801Z",
+        "lastUpdated": "2026-01-25T23:22:20.801Z",
+        "gitCommitSha": "469a6d81ebb8b827e284d4afb090c6c622d97747"
+      }
+    ],
+    "frontend-design@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/home/norris/.claude/plugins/cache/claude-plugins-official/frontend-design/96276205880a",
+        "version": "96276205880a",
+        "installedAt": "2026-01-25T23:24:25.489Z",
+        "lastUpdated": "2026-01-25T23:24:25.489Z",
+        "gitCommitSha": "96276205880a60fd66bbae981f5ab568e70c4cbf"
+      }
+    ]
+  }
+}
