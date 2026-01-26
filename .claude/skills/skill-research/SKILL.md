@@ -10,7 +10,26 @@ Research and evaluate existing Claude skills/plugins before installing.
 
 ## Workflow
 
-### 1. Search
+### 1. Clarify Intent (Before Search)
+
+**Don't assume - confirm what the user actually wants.**
+
+Infer from topic and confirm:
+> "Sounds like you want a skill for [inferred purpose]. Is that right?"
+
+**Common ambiguities:**
+
+| Topic | Could mean... |
+|-------|---------------|
+| "pull request" | Workflow automation? Writing descriptions? Review process? |
+| "testing" | Running tests? Writing tests? TDD methodology? |
+| "typescript" | LSP tooling? Best practices? Type patterns? |
+| "documentation" | Generating docs? Writing style? API docs? |
+
+If unclear, ask:
+> "What should this skill help you do specifically?"
+
+### 2. Search
 
 **Priority order:**
 1. GitHub API: `gh search repos "claude skill <topic>"` + `"claude plugin <topic>"`
@@ -18,7 +37,7 @@ Research and evaluate existing Claude skills/plugins before installing.
 
 Filter to relevant results (must be Claude skill/plugin).
 
-### 2. Evaluate Each Candidate
+### 3. Evaluate Each Candidate
 
 **Check metrics via GitHub API:**
 ```bash
@@ -40,7 +59,13 @@ gh api repos/<owner>/<repo> --jq '.stargazers_count, .forks_count, .pushed_at, .
 - Aligns with known standards?
 - Sufficient depth?
 
-### 3. Present Summary (Default)
+**Index vs Actual Skill:**
+- "awesome-*" repos are curated indexes, not skills themselves
+- For indexes: follow links to source repos, evaluate those
+- Known orgs (metabase, vercel, anthropic) carry more trust than individuals
+- Check if repo contains actual skill content or just links
+
+### 4. Present Summary (Default)
 
 ```markdown
 ## Skill Research: <topic>
@@ -62,7 +87,7 @@ Want detailed report?
 - 2-3 = "Use with caution"
 - 0-1 = "Not recommended"
 
-### 4. Detailed Report (On Request)
+### 5. Detailed Report (On Request)
 
 When user asks "elaborate", "details", or "tell me more":
 
@@ -93,7 +118,7 @@ When user asks "elaborate", "details", or "tell me more":
 [Final recommendation with reasoning]
 ```
 
-### 5. No Results
+### 6. No Results
 
 ```markdown
 No credible skills found for "<topic>".
