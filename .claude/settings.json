@@ -3,6 +3,17 @@
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "superpowers@superpowers-marketplace": true
+  },
   "companyAnnouncements": [
     "Hi Norris! What fun are we going to have today? 😼",
     "Hi Norris! What fun are we going to have today? 😹",
@@ -11,9 +22,5 @@
     "Hi Norris! What fun are we going to have today? 😿",
     "Hi Norris! What fun are we going to have today? 😽",
     "Hi Norris! What fun are we going to have today? 😸"
-  ],
-  "enabledPlugins": {
-    "frontend-design@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true
-  }
+  ]
 }

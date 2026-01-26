@@ -21,6 +21,70 @@
         "lastUpdated": "2026-01-25T23:24:25.489Z",
         "gitCommitSha": "96276205880a60fd66bbae981f5ab568e70c4cbf"
       }
+    ],
+    "github@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/home/norris/.claude/plugins/cache/claude-plugins-official/github/unknown",
+        "version": "unknown",
+        "installedAt": "2026-01-26T07:06:57.487Z",
+        "lastUpdated": "2026-01-26T07:06:57.487Z"
+      }
+    ],
+    "feature-dev@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/home/norris/.claude/plugins/cache/claude-plugins-official/feature-dev/unknown",
+        "version": "unknown",
+        "installedAt": "2026-01-26T07:06:57.509Z",
+        "lastUpdated": "2026-01-26T07:06:57.509Z"
+      }
+    ],
+    "typescript-lsp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/home/norris/.claude/plugins/cache/claude-plugins-official/typescript-lsp/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-01-26T07:06:57.522Z",
+        "lastUpdated": "2026-01-26T07:06:57.522Z"
+      }
+    ],
+    "code-simplifier@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/home/norris/.claude/plugins/cache/claude-plugins-official/code-simplifier/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-01-26T07:06:57.540Z",
+        "lastUpdated": "2026-01-26T07:06:57.540Z"
+      }
+    ],
+    "ralph-loop@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/home/norris/.claude/plugins/cache/claude-plugins-official/ralph-loop/unknown",
+        "version": "unknown",
+        "installedAt": "2026-01-26T07:06:57.555Z",
+        "lastUpdated": "2026-01-26T07:06:57.555Z"
+      }
+    ],
+    "playwright@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/home/norris/.claude/plugins/cache/claude-plugins-official/playwright/unknown",
+        "version": "unknown",
+        "installedAt": "2026-01-26T07:06:57.567Z",
+        "lastUpdated": "2026-01-26T07:06:57.567Z"
+      }
+    ],
+    "superpowers@superpowers-marketplace": [
+      {
+        "scope": "user",
+        "installPath": "/home/norris/.claude/plugins/cache/superpowers-marketplace/superpowers/4.1.1",
+        "version": "4.1.1",
+        "installedAt": "2026-01-26T07:06:58.551Z",
+        "lastUpdated": "2026-01-26T07:06:58.551Z",
+        "gitCommitSha": "469a6d81ebb8b827e284d4afb090c6c622d97747"
+      }
     ]
   }
 }
