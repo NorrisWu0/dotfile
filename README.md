@@ -42,9 +42,17 @@ Custom status line and plugin configs.
 ln -sf ~/git/norriswu/dotfile/.claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -sf ~/git/norriswu/dotfile/.claude/settings.json ~/.claude/settings.json
 ln -sf ~/git/norriswu/dotfile/.claude/statusline.sh ~/.claude/statusline.sh
-mkdir -p ~/.claude/plugins
+mkdir -p ~/.claude/plugins ~/.claude/skills
 ln -sf ~/git/norriswu/dotfile/.claude/plugins/installed_plugins.json ~/.claude/plugins/
 ln -sf ~/git/norriswu/dotfile/.claude/plugins/known_marketplaces.json ~/.claude/plugins/
+ln -sf ~/git/norriswu/dotfile/.claude/skills/document ~/.claude/skills/
 ```
 
 Plugin cache auto-downloads on restart - only config files tracked.
+
+**Custom skills:**
+- `document` - Generate user-facing docs via `/document`
+  - Directory-level scoping (depth = zoom)
+  - Question headings, concise + educational
+  - 5 min read target, splits if longer
+  - Suggests documentation after significant edits
