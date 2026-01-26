@@ -33,9 +33,10 @@
 
 ## Pull Request (PR)
 
-- Reference pull request template when creating a pr
-- Do not check off any check boxes
-- Use concise and easy to understand language for a developer when writing the pr
+- Use `/make-pr` skill for creating PRs
+- Reference project template if exists, else use default structure
+- Under 3 min read, high-level language, no implementation details
+- Do not check off any checkboxes (human-only)
 
 
 ## Resources

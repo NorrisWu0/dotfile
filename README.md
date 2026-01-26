@@ -47,6 +47,7 @@ ln -sf ~/git/norriswu/dotfile/.claude/plugins/installed_plugins.json ~/.claude/p
 ln -sf ~/git/norriswu/dotfile/.claude/plugins/known_marketplaces.json ~/.claude/plugins/
 ln -sf ~/git/norriswu/dotfile/.claude/skills/document ~/.claude/skills/
 ln -sf ~/git/norriswu/dotfile/.claude/skills/skill-research ~/.claude/skills/
+ln -sf ~/git/norriswu/dotfile/.claude/skills/make-pr ~/.claude/skills/
 ```
 
 Plugin cache auto-downloads on restart - only config files tracked.
@@ -62,3 +63,8 @@ Plugin cache auto-downloads on restart - only config files tracked.
   - Checks stars, forks, activity, author
   - Trust score based on metrics
   - Detailed report on request
+- `make-pr` - Create PRs with clear descriptions via `/make-pr`
+  - Detects project template or uses default
+  - Under 3 min read, high-level language
+  - TL;DR, Key changes, Testing, What else sections
+  - Human-only confirmation checkbox
