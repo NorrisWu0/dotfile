@@ -26,3 +26,25 @@ omarchy-restart-waybar
 ```
 
 **Syncing with upstream:** Omarchy defaults live at `~/.local/share/omarchy/config/waybar/`. After `omarchy-update`, diff against defaults and merge new features as needed.
+
+## Claude Code
+
+Custom status line and plugin configs.
+
+**Status line shows:** `[Model] dir | branch +staged ~modified ?untracked | ctx:% | tok:count`
+
+**Plugins enabled:**
+- `frontend-design@claude-plugins-official`
+- `superpowers@claude-plugins-official`
+
+```bash
+# Symlink configs (not using stow - direct symlinks)
+ln -sf ~/git/norriswu/dotfile/.claude/CLAUDE.md ~/.claude/CLAUDE.md
+ln -sf ~/git/norriswu/dotfile/.claude/settings.json ~/.claude/settings.json
+ln -sf ~/git/norriswu/dotfile/.claude/statusline.sh ~/.claude/statusline.sh
+mkdir -p ~/.claude/plugins
+ln -sf ~/git/norriswu/dotfile/.claude/plugins/installed_plugins.json ~/.claude/plugins/
+ln -sf ~/git/norriswu/dotfile/.claude/plugins/known_marketplaces.json ~/.claude/plugins/
+```
+
+Plugin cache auto-downloads on restart - only config files tracked.
