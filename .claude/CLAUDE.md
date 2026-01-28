@@ -8,7 +8,7 @@
 
 ## GitHub
 
-- use GitHub CLI (gh) when interacting with github repository, pull request or GitHub gist. 
+- use GitHub CLI (gh) when interacting with github repository, pull request or GitHub gist.
 
 ## Init Mode /init
 
@@ -38,6 +38,10 @@
 - Under 3 min read, high-level language, no implementation details
 - Do not check off any checkboxes (human-only)
 
+## General Coding Practice
+
+- Check `package.json` or the repo lock file to understand which package manager to use
+- DO NOT write new dependencies directly into `pacakge.json`, always use package manager to manage dependencies
 
 ## Resources
 
