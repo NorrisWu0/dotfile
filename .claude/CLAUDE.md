@@ -46,3 +46,7 @@
 ## Resources
 
 - [Claude Memory Management](https://code.claude.com/docs/en/memory)
+
+## Dotfile Repo Structure
+
+- `nvim/` - Neovim/LazyVim setup documentation (omarchy integration)
