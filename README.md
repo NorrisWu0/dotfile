@@ -2,14 +2,23 @@
 
 ## Setup
 
-[GNU Stow](https://www.gnu.org/software/stow/) symlinks files to `~`, keeping dotfiles version-controlled in one place.
+Each package is a flat directory symlinked directly to its target:
+
+| Package | Symlink |
+|---------|---------|
+| `hypr/` | `~/.config/hypr` |
+| `waybar/` | `~/.config/waybar` |
+| `nvim/` | `~/.config/nvim` |
+| `omarchy/branding/` | `~/.config/omarchy/branding` |
 
 ```bash
-brew install stow
-stow -t ~ .
+ln -s ~/git/norriswu0/dotfile/hypr ~/.config/hypr
+ln -s ~/git/norriswu0/dotfile/waybar ~/.config/waybar
+ln -s ~/git/norriswu0/dotfile/nvim ~/.config/nvim
+ln -s ~/git/norriswu0/dotfile/omarchy/branding ~/.config/omarchy/branding
 ```
 
-Stow creates symlinks, not copies. Changes are instant. Re-run `stow` only when adding new files.
+Changes to files in this repo apply instantly. No stow required.
 
 ## Waybar (Omarchy)
 
@@ -18,11 +27,11 @@ Custom waybar config with expanded system metrics:
 - CPU/memory usage percentages
 - Battery with percentage and wattage (↑ charging, ↓ discharging)
 - Clock: `YYYY MMM DD Day HH:MM`
+- Scratchpad indicator (requires `indicators/scratchpad-listener.sh` running)
 
 ```bash
-rm -rf ~/.config/waybar
-stow -t ~ waybar
 omarchy-restart-waybar
+~/.config/waybar/indicators/scratchpad-listener.sh &
 ```
 
 **Syncing with upstream:** Omarchy defaults live at `~/.local/share/omarchy/config/waybar/`. After `omarchy-update`, diff against defaults and merge new features as needed.
