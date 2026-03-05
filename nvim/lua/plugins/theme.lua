@@ -1,0 +1,1 @@
+/home/norris/.config/omarchy/current/theme/neovim.lua
