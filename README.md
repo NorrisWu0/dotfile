@@ -48,15 +48,14 @@ Custom status line and plugin configs.
 
 ```bash
 # Symlink configs (not using stow - direct symlinks)
-ln -sf ~/git/norriswu/dotfile/.claude/CLAUDE.md ~/.claude/CLAUDE.md
-ln -sf ~/git/norriswu/dotfile/.claude/settings.json ~/.claude/settings.json
-ln -sf ~/git/norriswu/dotfile/.claude/statusline.sh ~/.claude/statusline.sh
+ln -sf ~/git/norriswu/dotfile/claude/CLAUDE.md ~/.claude/CLAUDE.md
+ln -sf ~/git/norriswu/dotfile/claude/settings.json ~/.claude/settings.json
+ln -sf ~/git/norriswu/dotfile/claude/statusline.sh ~/.claude/statusline.sh
 mkdir -p ~/.claude/plugins ~/.claude/skills
-ln -sf ~/git/norriswu/dotfile/.claude/plugins/installed_plugins.json ~/.claude/plugins/
-ln -sf ~/git/norriswu/dotfile/.claude/plugins/known_marketplaces.json ~/.claude/plugins/
-ln -sf ~/git/norriswu/dotfile/.claude/skills/document ~/.claude/skills/
-ln -sf ~/git/norriswu/dotfile/.claude/skills/skill-research ~/.claude/skills/
-ln -sf ~/git/norriswu/dotfile/.claude/skills/make-pr ~/.claude/skills/
+ln -sf ~/git/norriswu/dotfile/claude/plugins/known_marketplaces.json ~/.claude/plugins/
+ln -sf ~/git/norriswu/dotfile/claude/skills/document ~/.claude/skills/
+ln -sf ~/git/norriswu/dotfile/claude/skills/skill-research ~/.claude/skills/
+ln -sf ~/git/norriswu/dotfile/claude/skills/make-pr ~/.claude/skills/
 ```
 
 Plugin cache auto-downloads on restart - only config files tracked.
