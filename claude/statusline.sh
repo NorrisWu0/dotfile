@@ -1,22 +1,44 @@
 #!/bin/bash
 input=$(cat)
 
+# ── Line 1: Model + Directory + Git branch ───────────────────────────────────
 MODEL=$(echo "$input" | jq -r '.model.display_name')
 DIR=$(echo "$input" | jq -r '.workspace.current_dir')
-# Git info
 BRANCH=$(git -C "$DIR" branch --show-current 2>/dev/null)
-if [[ -n "$BRANCH" ]]; then
-  STAGED=$(git -C "$DIR" diff --cached --numstat 2>/dev/null | wc -l | tr -d ' ')
-  MODIFIED=$(git -C "$DIR" diff --numstat 2>/dev/null | wc -l | tr -d ' ')
-  UNTRACKED=$(git -C "$DIR" ls-files --others --exclude-standard 2>/dev/null | wc -l | tr -d ' ')
-  GIT_STATUS="$BRANCH +$STAGED ~$MODIFIED ?$UNTRACKED"
-fi
 
-# Build output: [Model] dir | branch +staged ~modified ?untracked
-OUTPUT="[$MODEL] ${DIR##*/}"
-[[ -n "$GIT_STATUS" ]] && OUTPUT="$OUTPUT | $GIT_STATUS"
+LINE1="[$MODEL] ${DIR##*/}"
+[[ -n "$BRANCH" ]] && LINE1="$LINE1 | $BRANCH"
 
-# Claude plan quota (cached 5 min)
+# ── Line 2: Context window bar + Plan quota ───────────────────────────────────
+CTX_PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0')
+
+build_bar() {
+  local pct=$1 width=$2
+  local filled=$(( pct * width / 100 )) empty=$(( width - pct * width / 100 ))
+  local bar=""
+  for (( i=0; i<filled; i++ )); do bar+="█"; done
+  for (( i=0; i<empty; i++ )); do bar+="░"; done
+
+  local reset="\033[0m"
+  local color
+  if (( pct >= 80 )); then
+    color="\033[31m"   # red
+  elif (( pct >= 50 )); then
+    color="\033[33m"   # yellow
+  else
+    color="\033[32m"   # green
+  fi
+
+  echo -e "[${color}${bar}${reset}] ${pct}%"
+}
+
+# Reserve space for "[] XX%  5h:XXX% 7d:XXX%" — ~22 chars; rest goes to bar
+TERM_WIDTH=$(tput cols 2>/dev/null || echo 80)
+BAR_WIDTH=$(( TERM_WIDTH - 22 ))
+[[ $BAR_WIDTH -lt 10 ]] && BAR_WIDTH=10
+
+LINE2=$(build_bar "$CTX_PCT" "$BAR_WIDTH")
+
 CACHE_FILE="/tmp/claude_usage_cache.json"
 CACHE_AGE=300
 
@@ -37,8 +59,17 @@ if [[ -f "$CACHE_FILE" ]]; then
   FIVE_H=$(jq -r '.five_hour.utilization // empty' "$CACHE_FILE" 2>/dev/null)
   SEVEN_D=$(jq -r '.seven_day.utilization // empty' "$CACHE_FILE" 2>/dev/null)
   if [[ -n "$FIVE_H" && -n "$SEVEN_D" ]]; then
-    OUTPUT="$OUTPUT | 5h:${FIVE_H}% 7d:${SEVEN_D}%"
+    colorize() {
+      local pct=$1 label=$2
+      local reset="\033[0m" color
+      if (( pct >= 80 )); then color="\033[31m"
+      elif (( pct >= 50 )); then color="\033[33m"
+      else color="\033[32m"; fi
+      echo -e "${label}:${color}${pct}%${reset}"
+    }
+    LINE2="$LINE2  $(colorize "$FIVE_H" "5h") $(colorize "$SEVEN_D" "7d")"
   fi
 fi
 
-echo "$OUTPUT"
+echo "$LINE1"
+echo "$LINE2"
