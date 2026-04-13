@@ -27,9 +27,6 @@
 ## Edit Mode
 
 - YOU MUST always make sure the code can build without error
-- once I'm happy update the workspace CLAUDE.md to capture any new high-level information
-- for significant changes (new files/modules, feature complete): ask "Happy with these changes so we can document them?"
-- for minor changes (bugfix, tweaks): ask "Happy with these changes? Would you like to document this fix?"
 
 ## Pull Request (PR)
 
@@ -42,11 +39,3 @@
 
 - Check `package.json` or the repo lock file to understand which package manager to use
 - DO NOT write new dependencies directly into `pacakge.json`, always use package manager to manage dependencies
-
-## Resources
-
-- [Claude Memory Management](https://code.claude.com/docs/en/memory)
-
-## Dotfile Repo Structure
-
-- `nvim/` - Neovim/LazyVim setup documentation (omarchy integration)
