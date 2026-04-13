@@ -2,7 +2,13 @@
 
 ## Setup
 
-Each package is a flat directory symlinked directly to its target:
+```bash
+git clone https://github.com/norriswu0/dotfile ~/git/norriswu0/dotfile
+cd ~/git/norriswu0/dotfile
+./setup-dotfile.sh --repo-path ~/git/norriswu0/dotfile
+```
+
+Existing configs are backed up to `.orig` before being replaced. Use `--dry-run` to preview changes, `--list` to check current symlink state.
 
 | Package | Symlink |
 |---------|---------|
@@ -10,15 +16,7 @@ Each package is a flat directory symlinked directly to its target:
 | `waybar/` | `~/.config/waybar` |
 | `nvim/` | `~/.config/nvim` |
 | `omarchy/branding/` | `~/.config/omarchy/branding` |
-
-```bash
-ln -s ~/git/norriswu0/dotfile/hypr ~/.config/hypr
-ln -s ~/git/norriswu0/dotfile/waybar ~/.config/waybar
-ln -s ~/git/norriswu0/dotfile/nvim ~/.config/nvim
-ln -s ~/git/norriswu0/dotfile/omarchy/branding ~/.config/omarchy/branding
-```
-
-Changes to files in this repo apply instantly. No stow required.
+| `claude/` | `~/.claude/` (files and skill/plugin dirs) |
 
 ## Waybar (Omarchy)
 
@@ -27,11 +25,15 @@ Custom waybar config with expanded system metrics:
 - CPU/memory usage percentages
 - Battery with percentage and wattage (↑ charging, ↓ discharging)
 - Clock: `YYYY MMM DD Day HH:MM`
-- Scratchpad indicator (requires `indicators/scratchpad-listener.sh` running)
+- Scratchpad indicator (auto-started via `hypr/autostart.conf`)
+
+**Dependencies:**
+```bash
+sudo pacman -S openbsd-netcat  # required by scratchpad-listener.sh
+```
 
 ```bash
 omarchy-restart-waybar
-~/.config/waybar/indicators/scratchpad-listener.sh &
 ```
 
 **Syncing with upstream:** Omarchy defaults live at `~/.local/share/omarchy/config/waybar/`. After `omarchy-update`, diff against defaults and merge new features as needed.
@@ -45,18 +47,6 @@ Custom status line and plugin configs.
 **Plugins enabled:**
 - `frontend-design@claude-plugins-official`
 - `superpowers@claude-plugins-official`
-
-```bash
-# Symlink configs (not using stow - direct symlinks)
-ln -sf ~/git/norriswu/dotfile/claude/CLAUDE.md ~/.claude/CLAUDE.md
-ln -sf ~/git/norriswu/dotfile/claude/settings.json ~/.claude/settings.json
-ln -sf ~/git/norriswu/dotfile/claude/statusline.sh ~/.claude/statusline.sh
-mkdir -p ~/.claude/plugins ~/.claude/skills
-ln -sf ~/git/norriswu/dotfile/claude/plugins/known_marketplaces.json ~/.claude/plugins/
-ln -sf ~/git/norriswu/dotfile/claude/skills/document ~/.claude/skills/
-ln -sf ~/git/norriswu/dotfile/claude/skills/skill-research ~/.claude/skills/
-ln -sf ~/git/norriswu/dotfile/claude/skills/make-pr ~/.claude/skills/
-```
 
 Plugin cache auto-downloads on restart - only config files tracked.
 
