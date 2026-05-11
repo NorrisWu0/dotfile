@@ -1,2 +1,6 @@
 claude/settings.local.json
 claude/plugins
+
+# Hyprland
+# Let each device manage it's own monitors configuration
+hypr/monitors.conf
