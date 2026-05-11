@@ -22,5 +22,7 @@
     "Hi Norris! What fun are we going to have today? 😿",
     "Hi Norris! What fun are we going to have today? 😽",
     "Hi Norris! What fun are we going to have today? 😸"
-  ]
+  ],
+  "skipDangerousModePermissionPrompt": true,
+  "skipAutoPermissionPrompt": true
 }
