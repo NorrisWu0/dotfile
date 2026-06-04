@@ -56,6 +56,30 @@ gh pr create --title "<title>" --body-file /tmp/pr-body.md
 
 For draft: add `--draft` flag.
 
+### 5. Wrap Up After Merge
+
+When the user confirms the PR is merged, clean up the local workspace:
+
+```bash
+# Capture the working branch before switching
+branch=$(git branch --show-current)
+
+# Detect the base branch (main, master, etc.)
+base=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+
+# Switch to base branch
+git checkout "$base"
+
+# Delete the merged working branch
+git branch -d "$branch"
+
+# Pull latest base branch
+git pull
+```
+
+- The base branch is auto-detected — never assume `main` vs `master`.
+- If `git branch -d` fails because the branch isn't recognized as merged (e.g. squash merge), confirm with the user before using `git branch -D`.
+
 ## Default Template
 
 When no project template exists:
