@@ -173,3 +173,22 @@ else
         info "All done."
     fi
 fi
+
+# --- listener health check ---
+
+if ! $DRY_RUN && ! $LIST; then
+    section "Checking background listeners"
+    listener="$REPO_PATH/waybar/indicators/scratchpad-listener.sh"
+    if pgrep -f "scratchpad-listener.sh" &>/dev/null; then
+        ok "scratchpad-listener is running"
+    else
+        warn "scratchpad-listener is not running — starting it now"
+        nohup bash "$listener" &>/dev/null &
+        sleep 0.5
+        if pgrep -f "scratchpad-listener.sh" &>/dev/null; then
+            ok "scratchpad-listener started"
+        else
+            err "scratchpad-listener failed to start — check $listener"
+        fi
+    fi
+fi
