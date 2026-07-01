@@ -27,6 +27,8 @@
 ## Edit Mode
 
 - YOU MUST always make sure the code can build without error
+- YOU MUST always make sure the sanity check passes (`pnpm sanity`, `pnpm build lint type-check`, or relevant script passes) after implementations
+- YOU MUST not push unless explicitly instructed, always default to let user handle git push.
 
 ## Pull Request (PR)
 
@@ -39,3 +41,9 @@
 
 - Check `package.json` or the repo lock file to understand which package manager to use
 - DO NOT write new dependencies directly into `pacakge.json`, always use package manager to manage dependencies
+
+## Language Specific Rules
+
+### TypeScript
+
+- YOU MUST AVOID use of `any` wherever possible, ask for explicitly permission if use of any is unavoidable
