@@ -41,8 +41,14 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$REPO_PATH" ]]; then
-    printf "Error: --repo-path is required\n\n" >&2
-    usage
+    printf "No --repo-path provided. Use current directory (%s)? [y/n] " "$(pwd)" >&2
+    read -r reply
+    if [[ "$reply" == "y" || "$reply" == "Y" ]]; then
+        REPO_PATH="$(pwd)"
+    else
+        printf "Aborted.\n" >&2
+        exit 1
+    fi
 fi
 
 # Expand ~ and resolve to absolute path
