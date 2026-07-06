@@ -68,12 +68,10 @@ declare -a LINKS=(
     "nvim|$HOME/.config/nvim"
     "omarchy/branding|$HOME/.config/omarchy/branding"
     "agent/CLAUDE.md|$HOME/.claude/CLAUDE.md"
+    "agent/skills|$HOME/.agent/skills"
     "claude/settings.json|$HOME/.claude/settings.json"
     "claude/statusline.sh|$HOME/.claude/statusline.sh"
     "claude/plugins/known_marketplaces.json|$HOME/.claude/plugins/known_marketplaces.json"
-    "agent/skills/document|$HOME/.claude/skills/document"
-    "agent/skills/skill-research|$HOME/.claude/skills/skill-research"
-    "agent/skills/make-pr|$HOME/.claude/skills/make-pr"
 )
 
 # --- list mode ---
