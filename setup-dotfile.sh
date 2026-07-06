@@ -69,6 +69,8 @@ declare -a LINKS=(
     "omarchy/branding|$HOME/.config/omarchy/branding"
     "agent/CLAUDE.md|$HOME/.claude/CLAUDE.md"
     "agent/skills|$HOME/.agent/skills"
+    "agent/skills|$HOME/.claude/skills"
+    "agent/skills|$HOME/.config/opencode/skills"
     "claude/settings.json|$HOME/.claude/settings.json"
     "claude/statusline.sh|$HOME/.claude/statusline.sh"
     "claude/plugins/known_marketplaces.json|$HOME/.claude/plugins/known_marketplaces.json"
