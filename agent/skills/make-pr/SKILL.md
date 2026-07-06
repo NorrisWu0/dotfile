@@ -1,3 +1,8 @@
+---
+name: make-pr
+description: Write clear, concise PR descriptions readable in under 3 minutes. Use via /make-pr command with optional --draft flag.
+---
+
 # Make PR
 
 Write clear, concise PR descriptions readable in under 3 minutes.

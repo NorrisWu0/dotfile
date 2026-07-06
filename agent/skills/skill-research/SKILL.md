@@ -1,3 +1,8 @@
+---
+name: skill-research
+description: Research and evaluate existing Claude/opencode skills before installing. Use via /skill-research command to find trustworthy community skills.
+---
+
 # Skill Research
 
 Research and evaluate existing Claude skills/plugins before installing.

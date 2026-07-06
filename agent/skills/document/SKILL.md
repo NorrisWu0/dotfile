@@ -1,3 +1,8 @@
+---
+name: document
+description: Generate concise, educational documentation scoped to directory-level. Use via /document command or after significant implementation changes.
+---
+
 # Document Skill
 
 Generate concise, educational documentation scoped to directory-level.

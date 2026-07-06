@@ -1,3 +1,8 @@
+---
+name: design
+description: Wireframing, prototyping, and aesthetic reasoning. Generates production-quality UI prototypes and design rationale.
+---
+
 # Design Skill
 
 Capability for wireframing, prototyping, and aesthetic reasoning.
