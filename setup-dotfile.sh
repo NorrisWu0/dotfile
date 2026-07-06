@@ -61,13 +61,13 @@ declare -a LINKS=(
     "waybar|$HOME/.config/waybar"
     "nvim|$HOME/.config/nvim"
     "omarchy/branding|$HOME/.config/omarchy/branding"
-    "claude/CLAUDE.md|$HOME/.claude/CLAUDE.md"
+    "agent/CLAUDE.md|$HOME/.claude/CLAUDE.md"
     "claude/settings.json|$HOME/.claude/settings.json"
     "claude/statusline.sh|$HOME/.claude/statusline.sh"
     "claude/plugins/known_marketplaces.json|$HOME/.claude/plugins/known_marketplaces.json"
-    "claude/skills/document|$HOME/.claude/skills/document"
-    "claude/skills/skill-research|$HOME/.claude/skills/skill-research"
-    "claude/skills/make-pr|$HOME/.claude/skills/make-pr"
+    "agent/skills/document|$HOME/.claude/skills/document"
+    "agent/skills/skill-research|$HOME/.claude/skills/skill-research"
+    "agent/skills/make-pr|$HOME/.claude/skills/make-pr"
 )
 
 # --- list mode ---

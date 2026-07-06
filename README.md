@@ -16,7 +16,8 @@ Existing configs are backed up to `.orig` before being replaced. Use `--dry-run`
 | `waybar/` | `~/.config/waybar` |
 | `nvim/` | `~/.config/nvim` |
 | `omarchy/branding/` | `~/.config/omarchy/branding` |
-| `claude/` | `~/.claude/` (files and skill/plugin dirs) |
+| `agent/` | `~/.claude/CLAUDE.md` + `~/.claude/skills/*` (harness-agnostic) |
+| `claude/` | `~/.claude/` (harness-specific config: settings, plugins, statusline) |
 
 ## Waybar (Omarchy)
 
