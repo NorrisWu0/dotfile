@@ -185,17 +185,26 @@ fi
 
 if ! $DRY_RUN && ! $LIST; then
     section "Checking background listeners"
-    listener="$REPO_PATH/waybar/indicators/scratchpad-listener.sh"
-    if pgrep -f "scratchpad-listener.sh" &>/dev/null; then
-        ok "scratchpad-listener is running"
+    hypr_socket="${XDG_RUNTIME_DIR:-}/hypr/${HYPRLAND_INSTANCE_SIGNATURE:-}/.socket2.sock"
+    if [[ -z "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+        info "skipping scratchpad-listener (not running under Hyprland)"
+    elif [[ ! -S "$hypr_socket" ]]; then
+        info "skipping scratchpad-listener (Hyprland socket not found: $hypr_socket)"
+    elif ! command -v socat &>/dev/null; then
+        warn "skipping scratchpad-listener (socat not installed — pacman -S socat)"
     else
-        warn "scratchpad-listener is not running — starting it now"
-        nohup bash "$listener" &>/dev/null &
-        sleep 0.5
+        listener="$REPO_PATH/waybar/indicators/scratchpad-listener.sh"
         if pgrep -f "scratchpad-listener.sh" &>/dev/null; then
-            ok "scratchpad-listener started"
+            ok "scratchpad-listener is running"
         else
-            err "scratchpad-listener failed to start — check $listener"
+            warn "scratchpad-listener is not running — starting it now"
+            nohup bash "$listener" &>/dev/null &
+            sleep 0.5
+            if pgrep -f "scratchpad-listener.sh" &>/dev/null; then
+                ok "scratchpad-listener started"
+            else
+                err "scratchpad-listener failed to start — check $listener"
+            fi
         fi
     fi
 fi

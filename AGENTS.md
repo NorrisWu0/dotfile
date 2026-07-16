@@ -13,7 +13,7 @@ Personal dotfiles for an Omarchy (Arch + Hyprland) machine. No build, test, or l
 - `agent/` — harness-agnostic AI agent config: instruction file + `agent/skills/*` (linked into `~/.agent/skills`, `~/.claude/skills`, and `~/.config/opencode/skills` simultaneously).
 - `claude/` — Claude-Code-specific: `settings.json`, `statusline.sh`, plugin marketplace config, `agents/`. Plugin caches are not tracked; only config is.
 - `hypr/` — Hyprland config. `hypr/monitors.conf` is gitignored on purpose (per-device); never commit it.
-- `waybar/` — custom waybar; `indicators/scratchpad-listener.sh` is a background daemon (needs `openbsd-netcat`). Restart waybar with `omarchy-restart-waybar`. Omarchy upstream defaults live at `~/.local/share/omarchy/config/waybar/` — diff against them after `omarchy-update`.
+- `waybar/` — custom waybar; `indicators/scratchpad-listener.sh` is a background daemon (needs `socat` + a live Hyprland session; setup script skips it otherwise). Restart waybar with `omarchy-restart-waybar`. Omarchy upstream defaults live at `~/.local/share/omarchy/config/waybar/` — diff against them after `omarchy-update`.
 - `nvim/` — LazyVim config. `lazy-lock.json` is a plugin lockfile managed by lazy.nvim; don't hand-edit.
 - `blogs/` — standalone markdown notes, not deployed.
 

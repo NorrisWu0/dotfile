@@ -30,7 +30,7 @@ Custom waybar config with expanded system metrics:
 
 **Dependencies:**
 ```bash
-sudo pacman -S openbsd-netcat  # required by scratchpad-listener.sh
+sudo pacman -S socat  # required by scratchpad-listener.sh
 ```
 
 ```bash
