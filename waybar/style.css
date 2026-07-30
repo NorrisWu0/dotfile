@@ -34,7 +34,6 @@
 #battery,
 #pulseaudio,
 #custom-omarchy,
-#custom-screenrecording-indicator,
 #custom-update {
   min-width: 12px;
   margin: 0 7.5px;
@@ -65,13 +64,23 @@ tooltip {
 }
 
 #clock {
-  margin-left: 5px;
+  margin-left: 8.75px;
+}
+
+#custom-weather {
+  margin-left: 7.5px;
+  margin-right: 7.5px;
+}
+
+#custom-weather.unavailable {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .hidden {
   opacity: 0;
 }
-
 
 #custom-screenrecording-indicator,
 #custom-idle-indicator,
@@ -87,6 +96,11 @@ tooltip {
   color: #a55555;
 }
 
+#custom-idle-indicator.active,
+#custom-notification-silencing-indicator.active {
+  color: #a55555;
+}
+
 #custom-voxtype {
   min-width: 12px;
   margin: 0 0 0 7.5px;
@@ -94,33 +108,4 @@ tooltip {
 
 #custom-voxtype.recording {
   color: #a55555;
-}
-
-#custom-idle-indicator.active,
-#custom-notification-silencing-indicator.active {
-  color: #a55555;
-}
-
-#custom-scratchpad-indicator {
-  min-width: 12px;
-  margin: 0 0 0 7.5px;
-}
-
-#custom-scratchpad-indicator.active {
-  color: #ffffff;
-}
-
-#custom-scratchpad-indicator.inactive {
-  color: #555555;
-}
-
-#custom-weather {
-  margin-left: 7.5px;
-  margin-right: 7.5px;
-}
-
-#custom-weather.unavailable {
-  min-width: 0;
-  margin: 0;
-  padding: 0;
 }

@@ -63,18 +63,18 @@ fi
 # --- symlink definitions: "source_relative_to_repo|target" ---
 
 declare -a LINKS=(
-    "hypr|$HOME/.config/hypr"
-    "waybar|$HOME/.config/waybar"
+    "hypr/bindings.conf|$HOME/.config/hypr/bindings.conf"
+    "hypr/looknfeel.conf|$HOME/.config/hypr/looknfeel.conf"
+    "hypr/hyprlock.conf|$HOME/.config/hypr/hyprlock.conf"
+    "waybar/config.jsonc|$HOME/.config/waybar/config.jsonc"
+    "waybar/style.css|$HOME/.config/waybar/style.css"
     "nvim|$HOME/.config/nvim"
-    "omarchy/branding|$HOME/.config/omarchy/branding"
-    "agent/AGENTS.md|$HOME/.claude/CLAUDE.md"
+    "tmux/tmux.conf|$HOME/.config/tmux/tmux.conf"
+    "omarchy/branding/about.txt|$HOME/.config/omarchy/branding/about.txt"
+    "omarchy/branding/screensaver.txt|$HOME/.config/omarchy/branding/screensaver.txt"
     "agent/AGENTS.md|$HOME/.config/opencode/AGENTS.md"
     "agent/skills|$HOME/.agent/skills"
-    "agent/skills|$HOME/.claude/skills"
     "agent/skills|$HOME/.config/opencode/skills"
-    "claude/settings.json|$HOME/.claude/settings.json"
-    "claude/statusline.sh|$HOME/.claude/statusline.sh"
-    "claude/plugins/known_marketplaces.json|$HOME/.claude/plugins/known_marketplaces.json"
 )
 
 # --- list mode ---
@@ -181,30 +181,4 @@ else
     fi
 fi
 
-# --- listener health check ---
 
-if ! $DRY_RUN && ! $LIST; then
-    section "Checking background listeners"
-    hypr_socket="${XDG_RUNTIME_DIR:-}/hypr/${HYPRLAND_INSTANCE_SIGNATURE:-}/.socket2.sock"
-    if [[ -z "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
-        info "skipping scratchpad-listener (not running under Hyprland)"
-    elif [[ ! -S "$hypr_socket" ]]; then
-        info "skipping scratchpad-listener (Hyprland socket not found: $hypr_socket)"
-    elif ! command -v socat &>/dev/null; then
-        warn "skipping scratchpad-listener (socat not installed — pacman -S socat)"
-    else
-        listener="$REPO_PATH/waybar/indicators/scratchpad-listener.sh"
-        if pgrep -f "scratchpad-listener.sh" &>/dev/null; then
-            ok "scratchpad-listener is running"
-        else
-            warn "scratchpad-listener is not running — starting it now"
-            nohup bash "$listener" &>/dev/null &
-            sleep 0.5
-            if pgrep -f "scratchpad-listener.sh" &>/dev/null; then
-                ok "scratchpad-listener started"
-            else
-                err "scratchpad-listener failed to start — check $listener"
-            fi
-        fi
-    fi
-fi
