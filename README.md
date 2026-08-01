@@ -15,6 +15,7 @@ Existing configs are backed up to `.orig` before being replaced. Use `--dry-run`
 | `hypr/` | `~/.config/hypr` |
 | `waybar/` | `~/.config/waybar` |
 | `nvim/` | `~/.config/nvim` |
+| `tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
 | `omarchy/branding/` | `~/.config/omarchy/branding` |
 | `agent/` | `~/.claude/CLAUDE.md` + `~/.config/opencode/AGENTS.md` + skills in `~/.agent`, `~/.claude`, `~/.config/opencode` (harness-agnostic) |
 | `claude/` | `~/.claude/` (harness-specific config: settings, plugins, statusline) |
@@ -38,6 +39,19 @@ omarchy-restart-waybar
 ```
 
 **Syncing with upstream:** Omarchy defaults live at `~/.local/share/omarchy/config/waybar/`. After `omarchy-update`, diff against defaults and merge new features as needed.
+
+## Tmux
+
+Install the Tmux Plugin Manager once:
+
+```bash
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
+
+Start or reload tmux, then press `Ctrl-Space` followed by `I` to install the configured plugins. `tmux-resurrect` saves sessions and `tmux-continuum` saves them every 10 minutes and restores the last state when tmux starts. Snapshots are stored under `~/.local/share/tmux/resurrect/` on this setup.
+
+- Manual save: `Ctrl-Space`, then `Ctrl-S`
+- Manual restore: `Ctrl-Space`, then `Ctrl-R`
 
 ## Claude Code
 
