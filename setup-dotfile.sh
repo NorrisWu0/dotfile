@@ -98,6 +98,10 @@ if $LIST; then
             err "$target  (missing)"
         fi
     done
+    if [[ -x "$REPO_PATH/shell/setup.sh" ]]; then
+        printf "\n"
+        "$REPO_PATH/shell/setup.sh" --list
+    fi
     exit 0
 fi
 
@@ -169,6 +173,17 @@ for entry in "${LINKS[@]}"; do
         ok "$target → $src"
     fi
 done
+
+if [[ -x "$REPO_PATH/shell/setup.sh" ]]; then
+    if $DRY_RUN; then
+        "$REPO_PATH/shell/setup.sh" --dry-run
+    else
+        "$REPO_PATH/shell/setup.sh"
+    fi
+else
+    err "shell/setup.sh — shell setup script not found or not executable"
+    (( errors++ )) || true
+fi
 
 echo ""
 if (( errors > 0 )); then

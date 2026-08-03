@@ -20,6 +20,21 @@ Existing configs are backed up to `.orig` before being replaced. Use `--dry-run`
 | `agent/` | `~/.claude/CLAUDE.md` + `~/.config/opencode/AGENTS.md` + skills in `~/.agent`, `~/.claude`, `~/.config/opencode` (harness-agnostic) |
 | `claude/` | `~/.claude/` (harness-specific config: settings, plugins, statusline) |
 
+## Bash
+
+`shell/.bashrc` and `shell/.zshrc` are shell-specific entrypoints that source
+all `shell/*.conf` modules in sorted order. `setup-dotfile.sh` invokes
+`shell/setup.sh` to choose which profiles to link. The standalone
+`./shell/setup.sh` command can also be rerun independently. If `fzf` is
+installed, the setup chooser supports arrow keys, mouse selection, and
+multi-select. Aliases live in
+`alias.conf`, while `tools.conf` reads the tool registry from `tools.yaml`
+using `yq`. `shell/setup.sh --dry-run` previews both shell profile links.
+
+Run `tools-check` from an interactive Bash session to check configured tools
+and see official installation links for missing tools. If `yq` is unavailable,
+tool initialization is skipped with an installation hint.
+
 ## Waybar (Omarchy)
 
 Custom waybar config with expanded system metrics:
