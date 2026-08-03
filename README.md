@@ -17,7 +17,7 @@ Existing configs are backed up to `.orig` before being replaced. Use `--dry-run`
 | `nvim/` | `~/.config/nvim` |
 | `tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
 | `omarchy/branding/` | `~/.config/omarchy/branding` |
-| `agent/` | `~/.claude/CLAUDE.md` + `~/.config/opencode/AGENTS.md` + skills in `~/.agent`, `~/.claude`, `~/.config/opencode` (harness-agnostic) |
+| `agents/` | `~/.claude/CLAUDE.md` + `~/.config/opencode/AGENTS.md` + skills in `~/.agent`, `~/.claude`, `~/.config/opencode` (harness-agnostic) |
 | `claude/` | `~/.claude/` (harness-specific config: settings, plugins, statusline) |
 
 ## Bash

@@ -72,9 +72,9 @@ declare -a LINKS=(
     "tmux/tmux.conf|$HOME/.config/tmux/tmux.conf"
     "omarchy/branding/about.txt|$HOME/.config/omarchy/branding/about.txt"
     "omarchy/branding/screensaver.txt|$HOME/.config/omarchy/branding/screensaver.txt"
-    "agent/AGENTS.md|$HOME/.config/opencode/AGENTS.md"
-    "agent/skills|$HOME/.agent/skills"
-    "agent/skills|$HOME/.config/opencode/skills"
+    "agents/AGENTS.md|$HOME/.config/opencode/AGENTS.md"
+    "agents/skills|$HOME/.agent/skills"
+    "agents/skills|$HOME/.config/opencode/skills"
 )
 
 # --- list mode ---
@@ -195,5 +195,3 @@ else
         info "All done."
     fi
 fi
-
-
