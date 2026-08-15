@@ -4,3 +4,7 @@ claude/plugins
 # Hyprland
 # Let each device manage it's own monitors configuration
 hypr/monitors.conf
+
+# Local deployment backups
+*.orig
+*.bak-*

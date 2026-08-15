@@ -1,0 +1,34 @@
+tools:
+  zoxide:
+    command: zoxide
+    initialization_command: 'command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init bash)"'
+    installation_hint: https://github.com/ajeetdsouza/zoxide
+
+  nvm:
+    command: nvm
+    initialization_command: '[[ -r /usr/share/nvm/init-nvm.sh ]] && source /usr/share/nvm/init-nvm.sh'
+    installation_hint: https://github.com/nvm-sh/nvm
+
+  gh:
+    command: gh
+    installation_hint: https://github.com/cli/cli
+
+  tmux:
+    command: tmux
+    installation_hint: https://github.com/tmux/tmux/wiki/Installing
+
+  kubectl:
+    command: kubectl
+    installation_hint: https://kubernetes.io/docs/tasks/tools/
+
+  omnictl:
+    command: omnictl
+    installation_hint: https://github.com/siderolabs/omni
+
+  talosctl:
+    command: talosctl
+    installation_hint: https://github.com/siderolabs/talos
+
+  yq:
+    command: yq
+    installation_hint: https://github.com/mikefarah/yq
