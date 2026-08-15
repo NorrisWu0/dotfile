@@ -8,7 +8,7 @@ cd ~/git/norriswu0/dotfile
 ./setup-dotfile.sh --repo-path ~/git/norriswu0/dotfile
 ```
 
-Existing configs are backed up to `.orig` before being replaced. Use `--dry-run` to preview changes, `--list` to check current symlink state.
+Differing existing configs are backed up to `.bak-YYYYMMDDHHMMSS` before being replaced; identical files are linked without a backup. Backups are ignored by Git. Use `--dry-run` to preview changes, `--status` to check current symlink state.
 
 | Package | Symlink |
 |---------|---------|
@@ -17,8 +17,7 @@ Existing configs are backed up to `.orig` before being replaced. Use `--dry-run`
 | `nvim/` | `~/.config/nvim` |
 | `tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
 | `omarchy/branding/` | `~/.config/omarchy/branding` |
-| `agents/` | `~/.claude/CLAUDE.md` + `~/.config/opencode/AGENTS.md` + skills in `~/.agent`, `~/.claude`, `~/.config/opencode` (harness-agnostic) |
-| `claude/` | `~/.claude/` (harness-specific config: settings, plugins, statusline) |
+| `agents/` | `~/.config/opencode/AGENTS.md` + skills in `~/.agent/skills`, `~/.config/opencode/skills` |
 
 ## Bash
 
@@ -30,6 +29,11 @@ installed, the setup chooser supports arrow keys, mouse selection, and
 multi-select. Aliases live in
 `alias.conf`, while `tools.conf` reads the tool registry from `tools.yaml`
 using `yq`. `shell/setup.sh --dry-run` previews both shell profile links.
+
+Each configuration directory owns a `setup.sh` adapter. The root setup script
+resolves the repository path, then delegates to `hypr/setup.sh`,
+`waybar/setup.sh`, `nvim/setup.sh`, `tmux/setup.sh`, `omarchy/setup.sh`,
+`agents/setup.sh`, and `shell/setup.sh`.
 
 Run `tools-check` from an interactive Bash session to check configured tools
 and see official installation links for missing tools. If `yq` is unavailable,

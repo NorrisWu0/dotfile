@@ -2,51 +2,16 @@
 
 set -euo pipefail
 
-usage() {
-    cat <<EOF
-Usage: $(basename "$0") [--dry-run] [--list]
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/setup.sh"
+setup_parse_args "$@"
 
-Options:
-  --dry-run  Show both shell links without making changes
-  --list     Show the current state of both shell profile links
-  -h, --help Show this help
-EOF
-    exit 0
-}
-
-DRY_RUN=false
-LIST=false
-
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        --dry-run) DRY_RUN=true; shift ;;
-        --list) LIST=true; shift ;;
-        -h|--help) usage ;;
-        *) printf 'Unknown option: %s\n' "$1" >&2; usage ;;
-    esac
-done
-
-SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-
-if $LIST; then
+if $STATUS; then
     for selected_shell in bash zsh; do
         case "$selected_shell" in
-            bash) source="$SCRIPT_DIR/.bashrc"; target="$HOME/.bashrc" ;;
-            zsh) source="$SCRIPT_DIR/.zshrc"; target="$HOME/.zshrc" ;;
+            bash) source="$REPO_PATH/shell/.bashrc"; target="$HOME/.bashrc" ;;
+            zsh) source="$REPO_PATH/shell/.zshrc"; target="$HOME/.zshrc" ;;
         esac
-
-        if [[ -L "$target" ]]; then
-            actual="$(readlink "$target")"
-            if [[ "$actual" == "$source" ]]; then
-                printf 'ok       %s -> %s\n' "$target" "$source"
-            else
-                printf 'mismatch %s -> %s (expected %s)\n' "$target" "$actual" "$source"
-            fi
-        elif [[ -e "$target" ]]; then
-            printf 'file     %s (not a symlink)\n' "$target"
-        else
-            printf 'missing  %s\n' "$target"
-        fi
+        setup_link_status "$source" "$target"
     done
     exit 0
 fi
@@ -92,12 +57,12 @@ link_shell() {
 
     case "$selected_shell" in
         bash)
-            source="$SCRIPT_DIR/.bashrc"
-            target="$HOME/.bashrc"
-            ;;
-        zsh)
-            source="$SCRIPT_DIR/.zshrc"
-            target="$HOME/.zshrc"
+        source="$REPO_PATH/shell/.bashrc"
+        target="$HOME/.bashrc"
+        ;;
+    zsh)
+        source="$REPO_PATH/shell/.zshrc"
+        target="$HOME/.zshrc"
             ;;
         *)
             printf 'Unsupported shell: %s\n' "$selected_shell" >&2
@@ -105,34 +70,7 @@ link_shell() {
             ;;
     esac
 
-    if [[ ! -f "$source" ]]; then
-        printf 'Error: shell configuration does not exist: %s\n' "$source" >&2
-        return 1
-    fi
-
-    if $DRY_RUN; then
-        printf 'Would link %s -> %s\n' "$target" "$source"
-        return 0
-    fi
-
-    if [[ -L "$target" ]]; then
-        actual="$(readlink "$target")"
-        if [[ "$actual" == "$source" ]]; then
-            printf '%s is already linked to %s\n' "$target" "$source"
-            return 0
-        fi
-        ln -sf "$source" "$target"
-        printf 'Relinked %s -> %s\n' "$target" "$source"
-    elif [[ -e "$target" ]]; then
-        backup="${target}.orig"
-        mv "$target" "$backup"
-        ln -s "$source" "$target"
-        printf 'Linked %s -> %s (backed up existing file to %s)\n' \
-            "$target" "$source" "$backup"
-    else
-        ln -s "$source" "$target"
-        printf 'Linked %s -> %s\n' "$target" "$source"
-    fi
+    setup_link "$source" "$target" "$DRY_RUN"
 }
 
 for selected_shell in "${selected_shells[@]}"; do
