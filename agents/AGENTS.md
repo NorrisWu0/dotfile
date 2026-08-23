@@ -5,6 +5,7 @@
 - always be concise in responses
 - end your statement with "Meow 😸"
 - end your questions with "Meow?🐱"
+- remeber that your user is dyslexia, keep your response in 20 - 30 lines, and use progressive disclousure technique when outputting information
 
 ## GitHub
 

@@ -46,6 +46,7 @@ git diff main...HEAD
 - Under 3 min read target
 - High-level language, no implementation details
 - One line per bullet, no sub-bullets
+- Group key changes by user-facing feature, not by architecture layer
 - Leave sections empty or "N/A" if not applicable
 - No filler content
 
@@ -94,12 +95,16 @@ When no project template exists:
 
 - [one line per change, at a glance]
 
+## Why are we making this change?
+
+[1-2 sentences on the problem or motivation this PR solves]
+
 ## What are the key changes?
 
-### [Change 1 title]
+### [Feature/outcome 1]
 [2-3 sentences max]
 
-### [Change 2 title]
+### [Feature/outcome 2]
 [2-3 sentences max]
 
 ## How do I know this PR can be merged?
@@ -129,13 +134,40 @@ When no project template exists:
 | Section | Source | Rule |
 |---------|--------|------|
 | TL;DR | Commit messages + diff summary | One line per logical change |
-| Key changes | Full diff analysis | Group related files, explain "what" not "how" |
+| Why | Issue, context, or conversation | Problem it solves, not implementation |
+| Key changes | Full diff analysis | Group by feature/outcome, not by layer (repo/service/UI) |
 | Can be merged? | Project config | List actual commands, no checkboxes |
 | What else? | Minor changes, deps, refactors | Only if notable, else "N/A" |
+
+## Key Changes Examples
+
+**Good** (feature/outcome, high-level):
+
+```markdown
+### Todo feature
+Users can create, complete, and delete todos. Todos persist across reloads.
+
+### Dark mode toggle
+A global theme switch in settings applies instantly across all views.
+```
+
+**Bad** (spread too thin by layer, implementation detail):
+
+```markdown
+### Repository layer
+Added TodoRepository with CRUD methods backed by SQLite.
+
+### Service layer
+Added TodoService to orchestrate validation and persistence.
+
+### UI layer
+Added TodoList and TodoItem components wired to the service.
+```
 
 ## Anti-patterns
 
 - Implementation details ("changed line 42 in foo.ts")
+- Grouping by architecture layer (repo/service/UI) instead of user-facing outcome
 - Verbose explanations
 - Sub-bullets
 - Padding empty sections

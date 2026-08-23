@@ -85,18 +85,8 @@ Custom status line and plugin configs.
 Plugin cache auto-downloads on restart - only config files tracked.
 
 **Custom skills:**
-- `document` - Generate user-facing docs via `/document`
-  - Directory-level scoping (depth = zoom)
-  - Question headings, concise + educational
-  - 5 min read target, splits if longer
-  - Suggests documentation after significant edits
-- `skill-research` - Evaluate skills before installing via `/skill-research <topic>`
-  - Searches GitHub first, then web
-  - Checks stars, forks, activity, author
-  - Trust score based on metrics
-  - Detailed report on request
 - `make-pr` - Create PRs with clear descriptions via `/make-pr`
   - Detects project template or uses default
   - Under 3 min read, high-level language
-  - TL;DR, Key changes, Testing, What else sections
+  - Why, TL;DR, Key changes, Testing, What else sections
   - Human-only confirmation checkbox
