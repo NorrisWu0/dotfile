@@ -5,6 +5,11 @@ set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/setup.sh"
 setup_parse_args "$@"
 
+if [[ ! -d "$HOME/.config/hypr" ]]; then
+    printf 'skipping hypr: %s not found on this host\n' "$HOME/.config/hypr"
+    exit 0
+fi
+
 MODULE_LINKS=(
     "hypr/bindings.conf|$HOME/.config/hypr/bindings.conf"
     "hypr/looknfeel.conf|$HOME/.config/hypr/looknfeel.conf"
