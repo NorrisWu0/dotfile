@@ -7,7 +7,7 @@ setup_parse_args "$@"
 
 MODULE_LINKS=(
     "agents/AGENTS.md|$HOME/.config/opencode/AGENTS.md"
-    "agents/skills|$HOME/.agent/skills"
+    "agents/skills|$HOME/.agents/skills"
     "agents/skills|$HOME/.config/opencode/skills"
 )
 
