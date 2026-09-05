@@ -53,7 +53,7 @@ if [[ ! -d "$REPO_PATH" ]]; then
     exit 1
 fi
 
-MODULES=(hypr waybar nvim tmux omarchy agents shell)
+MODULES=(hypr waybar nvim tmux herdr omarchy agents shell)
 
 run_module() {
     local module="$1"

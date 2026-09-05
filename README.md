@@ -16,6 +16,7 @@ Differing existing configs are backed up to `.bak-YYYYMMDDHHMMSS` before being r
 | `waybar/` | `~/.config/waybar` |
 | `nvim/` | `~/.config/nvim` |
 | `tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
+| `herdr/config.toml` | `~/.config/herdr/config.toml` |
 | `omarchy/branding/` | `~/.config/omarchy/branding` |
 | `agents/` | `~/.config/opencode/AGENTS.md` + skills in `~/.agent/skills`, `~/.config/opencode/skills` |
 
@@ -32,7 +33,8 @@ using `yq`. `shell/setup.sh --dry-run` previews both shell profile links.
 
 Each configuration directory owns a `setup.sh` adapter. The root setup script
 resolves the repository path, then delegates to `hypr/setup.sh`,
-`waybar/setup.sh`, `nvim/setup.sh`, `tmux/setup.sh`, `omarchy/setup.sh`,
+`waybar/setup.sh`, `nvim/setup.sh`, `tmux/setup.sh`, `herdr/setup.sh`,
+`omarchy/setup.sh`,
 `agents/setup.sh`, and `shell/setup.sh`.
 
 Run `tools-check` from an interactive Bash session to check configured tools
@@ -71,6 +73,10 @@ Start or reload tmux, then press `Ctrl-Space` followed by `I` to install the con
 
 - Manual save: `Ctrl-Space`, then `Ctrl-S`
 - Manual restore: `Ctrl-Space`, then `Ctrl-R`
+
+## Herdr
+
+`herdr/config.toml` uses a `ctrl+space` prefix with tmux-style bindings (alt+arrows for workspace/tab nav, alt+enter/alt+shift+enter splits, ctrl+alt+arrows pane focus). Plugins are declared in `herdr/plugins.yaml` and synced by `herdr/setup.sh` via `herdr plugin install` — add one `owner/repo[/subdir]` per line and rerun setup.
 
 ## Claude Code
 

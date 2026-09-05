@@ -1,0 +1,4 @@
+# herdr plugins — declarative list, synced by herdr/setup.sh
+# one "owner/repo[/subdir...]" per entry (as accepted by `herdr plugin install`)
+plugins:
+  - kryptamine/herdr-auto-title
