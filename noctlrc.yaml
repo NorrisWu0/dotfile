@@ -1,0 +1,68 @@
+version: 1
+modules:
+  - name: hypr
+    links:
+      - source: hypr/bindings.conf
+        targets:
+          - ~/.config/hypr/bindings.conf
+      - source: hypr/looknfeel.conf
+        targets:
+          - ~/.config/hypr/looknfeel.conf
+      - source: hypr/hyprlock.conf
+        targets:
+          - ~/.config/hypr/hyprlock.conf
+
+  - name: waybar
+    links:
+      - source: waybar/config.jsonc
+        targets:
+          - ~/.config/waybar/config.jsonc
+      - source: waybar/style.css
+        targets:
+          - ~/.config/waybar/style.css
+
+  - name: nvim
+    links:
+      - source: nvim
+        targets:
+          - ~/.config/nvim
+
+  - name: tmux
+    links:
+      - source: tmux/tmux.conf
+        targets:
+          - ~/.config/tmux/tmux.conf
+
+  - name: herdr
+    links:
+      - source: herdr/config.toml
+        targets:
+          - ~/.config/herdr/config.toml
+
+  - name: omarchy
+    links:
+      - source: omarchy/branding/about.txt
+        targets:
+          - ~/.config/omarchy/branding/about.txt
+      - source: omarchy/branding/screensaver.txt
+        targets:
+          - ~/.config/omarchy/branding/screensaver.txt
+
+  - name: agents
+    links:
+      - source: agents/AGENTS.md
+        targets:
+          - ~/.config/opencode/AGENTS.md
+      - source: agents/skills
+        targets:
+          - ~/.agents/skills
+          - ~/.config/opencode/skills
+
+  - name: shell
+    links:
+      - source: shell/.bashrc
+        targets:
+          - ~/.bashrc
+      - source: shell/.zshrc
+        targets:
+          - ~/.zshrc
