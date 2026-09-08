@@ -10,6 +10,8 @@ MODULE_LINKS=(
     "agents/skills|$HOME/.config/opencode/skills"
     "agents/AGENTS.md|$HOME/.agents/AGENTS.md"
     "agents/skills|$HOME/.agents/skills"
+    "agents/AGENTS.md|$HOME/.pi/agent/AGENTS.md"
+    "agents/skills|$HOME/.pi/agent/skills"
 )
 
 setup_module_links
