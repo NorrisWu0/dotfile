@@ -11,14 +11,15 @@ cd ~/git/norriswu0/dotfile
 Differing existing configs are backed up to `.bak-YYYYMMDDHHMMSS` before being replaced; identical files are linked without a backup. Backups are ignored by Git. Use `--dry-run` to preview changes, `--status` to check current symlink state.
 
 | Package | Symlink |
-|---------|---------|
+| --------- | --------- |
 | `hypr/` | `~/.config/hypr` |
 | `waybar/` | `~/.config/waybar` |
 | `nvim/` | `~/.config/nvim` |
 | `tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
 | `herdr/config.toml` | `~/.config/herdr/config.toml` |
 | `omarchy/branding/` | `~/.config/omarchy/branding` |
-| `agents/` | `~/.config/opencode/AGENTS.md` + skills in `~/.agent/skills`, `~/.config/opencode/skills` |
+| `agents/` | `~/.config/opencode/AGENTS.md` + skills in `~/.agent/skills`, `~/.config/opencode/skills`, `~/.pi/agent/AGENTS.md`, `~/.pi/agent/skills` |
+| `pi/` | `~/.pi/agent/settings.json` + custom subagents in `~/.pi/agent/agents` |
 
 ## Bash
 
@@ -35,7 +36,7 @@ Each configuration directory owns a `setup.sh` adapter. The root setup script
 resolves the repository path, then delegates to `hypr/setup.sh`,
 `waybar/setup.sh`, `nvim/setup.sh`, `tmux/setup.sh`, `herdr/setup.sh`,
 `omarchy/setup.sh`,
-`agents/setup.sh`, and `shell/setup.sh`.
+`agents/setup.sh`, `pi/setup.sh`, and `shell/setup.sh`.
 
 Run `tools-check` from an interactive Bash session to check configured tools
 and see official installation links for missing tools. If `yq` is unavailable,
@@ -44,6 +45,7 @@ tool initialization is skipped with an installation hint.
 ## Waybar (Omarchy)
 
 Custom waybar config with expanded system metrics:
+
 - All tray icons visible (no hidden drawer)
 - CPU/memory usage percentages
 - Battery with percentage and wattage (↑ charging, ↓ discharging)
@@ -51,6 +53,7 @@ Custom waybar config with expanded system metrics:
 - Scratchpad indicator (auto-started via `hypr/autostart.conf`)
 
 **Dependencies:**
+
 ```bash
 sudo pacman -S socat  # required by scratchpad-listener.sh
 ```
@@ -85,12 +88,14 @@ Custom status line and plugin configs.
 **Status line shows:** `[Model] dir | branch +staged ~modified ?untracked | ctx:% | tok:count`
 
 **Plugins enabled:**
+
 - `frontend-design@claude-plugins-official`
 - `superpowers@claude-plugins-official`
 
 Plugin cache auto-downloads on restart - only config files tracked.
 
 **Custom skills:**
+
 - `make-pr` - Create PRs with clear descriptions via `/make-pr`
   - Detects project template or uses default
   - Under 3 min read, high-level language

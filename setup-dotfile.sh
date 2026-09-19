@@ -15,9 +15,9 @@ EOF
     exit 0
 }
 
-info()    { printf "  %s\n" "$*"; }
-warn()    { printf "\033[33m  !\033[0m %s\n" "$*"; }
-err()     { printf "\033[31m  ✗\033[0m %s\n" "$*"; }
+info() { printf "  %s\n" "$*"; }
+warn() { printf "\033[33m  !\033[0m %s\n" "$*"; }
+err() { printf "\033[31m  ✗\033[0m %s\n" "$*"; }
 section() { printf "\n\033[1m%s\033[0m\n" "$*"; }
 
 REPO_PATH=""
@@ -26,11 +26,23 @@ STATUS=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --repo-path) REPO_PATH="${2:-}"; shift 2 ;;
-        --dry-run)   DRY_RUN=true; shift ;;
-        --status)    STATUS=true; shift ;;
-        -h|--help)   usage ;;
-        *) printf 'Unknown option: %s\n' "$1" >&2; usage ;;
+    --repo-path)
+        REPO_PATH="${2:-}"
+        shift 2
+        ;;
+    --dry-run)
+        DRY_RUN=true
+        shift
+        ;;
+    --status)
+        STATUS=true
+        shift
+        ;;
+    -h | --help) usage ;;
+    *)
+        printf 'Unknown option: %s\n' "$1" >&2
+        usage
+        ;;
     esac
 done
 
@@ -53,7 +65,7 @@ if [[ ! -d "$REPO_PATH" ]]; then
     exit 1
 fi
 
-MODULES=(hypr waybar nvim tmux herdr omarchy agents shell)
+MODULES=(hypr waybar nvim tmux herdr omarchy agents pi shell)
 
 run_module() {
     local module="$1"
