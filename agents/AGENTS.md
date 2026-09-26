@@ -48,33 +48,6 @@
 - Avoid comments that merely repeat a variable name, function name, field name, or the next line of code.
 - When documentation includes examples and reference tables, do not repeat the same description in both places; choose one authoritative location.
 
-## Documentation Style
-
-- Prefer a Q&A structure for documentation when it matches the reader's needs.
-- Start with `What am I looking at?` as an executive summary and high-level map of the document.
-- Use questions as section headings when they reflect the reader's likely intent.
-- Answer each question directly before adding supporting details, examples, or references.
-- Keep examples copyable and place field-specific explanations in the example only when they add useful context.
-- Avoid repeating the same explanation across the summary, examples, tables, and prose.
-- Include an `Is there any external references to this documentation?` section when related resources exist outside the document.
-- Use that section for links to external websites, repository documentation, source code, examples, and related design documents.
-- Add a short description explaining why each reference is relevant.
-- Do not duplicate reference content; link to the authoritative source instead.
-
-Example opening:
-
-```md
-## What am I looking at?
-
-A high-level overview of the system, followed by its main use cases,
-configuration examples, reference details, and related resources.
-
-## Is there any external references to this documentation?
-
-- [Related architecture](./architecture.md) — explains the system components and their relationships.
-- [Project repository](https://github.com/example/project) — contains the implementation and source code.
-```
-
 ## Language Specific Rules
 
 ### TypeScript

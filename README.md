@@ -101,3 +101,4 @@ Plugin cache auto-downloads on restart - only config files tracked.
   - Under 3 min read, high-level language
   - Why, TL;DR, Key changes, Testing, What else sections
   - Human-only confirmation checkbox
+- `markdown-documentation` - Apply documentation style and reusable layouts when editing Markdown
