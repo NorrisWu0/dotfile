@@ -1,30 +1,47 @@
+# --- General ---
 onboarding = false
-[ui.toast]
-delivery = "herdr"
 
+# --- UI ---
 [ui]
 status_indicators = "symbols"
 pane_gaps = false
 
+[ui.toast]
+delivery = "herdr"
+
+# --- Keybindings ---
 [keys]
 prefix = "ctrl+space"
+
+# Workspace
+new_workspace = "prefix+shift+c"
 previous_workspace = "alt+up"
 next_workspace = "alt+down"
+
+# Tabs
+new_tab = "prefix+c"
 previous_tab = "alt+left"
 next_tab = "alt+right"
 move_tab_previous = "alt+shift+left"
 move_tab_next = "alt+shift+right"
+
+# Splits
 split_horizontal = ["prefix+minus", "alt+shift+enter"]
 split_vertical = ["prefix+v", "alt+enter"]
+
+# Focus
 focus_pane_left = ["prefix+h", "ctrl+alt+left"]
 focus_pane_down = ["prefix+j", "ctrl+alt+down"]
 focus_pane_up = ["prefix+k", "ctrl+alt+up"]
 focus_pane_right = ["prefix+l", "ctrl+alt+right"]
+
+# Close
 close_pane = ["prefix+x", "alt+esc"]
 
 [keys.indexed]
 tabs = "alt"
 
+# --- Theme ---
 [theme]
 name = "catppuccin"
 auto_switch = false
