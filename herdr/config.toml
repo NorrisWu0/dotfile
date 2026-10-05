@@ -15,11 +15,13 @@ prefix = "ctrl+space"
 
 # Workspace
 new_workspace = "prefix+shift+c"
+rename_workspace = "prefix+shift+r"
 previous_workspace = "alt+up"
 next_workspace = "alt+down"
 
 # Tabs
 new_tab = "prefix+c"
+rename_tab = "prefix+r"
 previous_tab = "alt+left"
 next_tab = "alt+right"
 move_tab_previous = "alt+shift+left"
