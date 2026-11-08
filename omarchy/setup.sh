@@ -6,6 +6,10 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lib/setup.sh"
 setup_parse_args "$@"
 
 if [[ ! -d "$HOME/.config/omarchy" ]]; then
+    if $SYNC_STATUS; then
+        printf 'not-synced\n'
+        exit 0
+    fi
     printf 'skipping omarchy: %s not found on this host\n' "$HOME/.config/omarchy"
     exit 0
 fi

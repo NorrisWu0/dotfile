@@ -1,12 +1,10 @@
 tools:
   zoxide:
     command: zoxide
-    initialization_command: 'command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init bash)"'
     installation_hint: https://github.com/ajeetdsouza/zoxide
 
   nvm:
     command: nvm
-    initialization_command: '[[ -r /usr/share/nvm/init-nvm.sh ]] && source /usr/share/nvm/init-nvm.sh'
     installation_hint: https://github.com/nvm-sh/nvm
 
   gh:
@@ -23,7 +21,7 @@ tools:
 
   omnictl:
     command: omnictl
-    installation_hint: https://github.com/siderolabs/omni
+    installation_hint: https://github.com/siderolabs/omni/releases/tag/v1.9.1
 
   talosctl:
     command: talosctl

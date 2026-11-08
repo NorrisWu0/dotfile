@@ -2,15 +2,9 @@ version: 1
 modules:
   - name: hypr
     links:
-      - source: hypr/bindings.conf
+      - source: hypr/looknfeel.lua
         targets:
-          - ~/.config/hypr/bindings.conf
-      - source: hypr/looknfeel.conf
-        targets:
-          - ~/.config/hypr/looknfeel.conf
-      - source: hypr/hyprlock.conf
-        targets:
-          - ~/.config/hypr/hyprlock.conf
+          - ~/.config/hypr/looknfeel.lua
 
   - name: waybar
     links:
@@ -60,9 +54,6 @@ modules:
 
   - name: shell
     links:
-      - source: shell/.bashrc
+      - source: shell
         targets:
-          - ~/.bashrc
-      - source: shell/.zshrc
-        targets:
-          - ~/.zshrc
+          - ~/.config/dotfile/shell

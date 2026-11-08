@@ -11,6 +11,10 @@ MODULE_LINKS=(
 
 setup_module_links
 
+if $STATUS || $SYNC_STATUS; then
+    exit 0
+fi
+
 sync_herdr_plugins() {
     local plugins_file="$REPO_PATH/herdr/plugins.yaml"
 
@@ -26,8 +30,10 @@ sync_herdr_plugins() {
         return 0
     fi
 
-    local installed
-    installed="$(herdr plugin list --json 2>/dev/null | jq -r '.result.plugins // [] | .[].source | (.owner + "/" + .repo)' 2>/dev/null || true)"
+    local installed=""
+    if ! $DRY_RUN; then
+        installed="$(herdr plugin list --json 2>/dev/null | jq -r '.result.plugins // [] | .[].source | (.owner + "/" + .repo)' 2>/dev/null || true)"
+    fi
 
     local plugin owner_repo
     while IFS= read -r plugin; do
@@ -38,7 +44,7 @@ sync_herdr_plugins() {
             continue
         fi
         if $DRY_RUN; then
-            printf 'would install plugin: %s\n' "$plugin"
+            printf 'would install plugin if missing: %s\n' "$plugin"
         else
             printf 'installing plugin: %s\n' "$plugin"
             herdr plugin install "$plugin" -y

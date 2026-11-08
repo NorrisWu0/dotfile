@@ -2,9 +2,12 @@ claude/settings.local.json
 claude/plugins
 
 # Hyprland
-# Let each device manage it's own monitors configuration
-hypr/monitors.conf
+# Keep monitor configuration per-device.
+hypr/monitors.lua
 
 # Local deployment backups
 *.orig
 *.bak-*
+
+# Downloaded Omni CLI binary
+/omnictl-linux-amd64

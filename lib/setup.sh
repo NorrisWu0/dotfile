@@ -2,12 +2,13 @@
 
 setup_usage() {
     cat <<EOF
-Usage: $(basename "$0") --repo-path <path> [--dry-run] [--status]
+Usage: $(basename "$0") --repo-path <path> [--dry-run] [--status] [--sync-status]
 
 Options:
   --repo-path <path>  Path to the dotfile repo root
   --dry-run           Show what would be linked without making changes
   --status            Show the current state of managed symlinks
+  --sync-status       Print synced, drifted, or not-synced
 EOF
 }
 
@@ -15,12 +16,14 @@ setup_parse_args() {
     REPO_PATH=""
     DRY_RUN=false
     STATUS=false
+    SYNC_STATUS=false
 
     while [[ $# -gt 0 ]]; do
         case "$1" in
             --repo-path) REPO_PATH="${2:-}"; shift 2 ;;
             --dry-run)   DRY_RUN=true; shift ;;
             --status)    STATUS=true; shift ;;
+            --sync-status) SYNC_STATUS=true; shift ;;
             -h|--help)
                 setup_usage
                 exit 0
@@ -84,21 +87,24 @@ setup_link() {
         if [[ "$dry_run" == true ]]; then
             printf 'would mkdir -p %s\n' "$parent"
         else
-            mkdir -p "$parent"
+            mkdir -p "$parent" || return 1
         fi
     fi
 
     if [[ -L "$target" ]]; then
-        actual="$(readlink "$target")"
+        actual="$(readlink "$target")" || return 1
         if [[ "$actual" == "$source" ]]; then
             printf 'already linked: %s -> %s\n' "$target" "$source"
             return 0
         fi
+        backup="$(setup_backup_path "$target")"
         if [[ "$dry_run" == true ]]; then
-            printf 'would relink: %s -> %s\n' "$target" "$source"
+            printf 'would backup: %s -> %s\n' "$target" "$backup"
+            printf 'would link: %s -> %s\n' "$target" "$source"
         else
-            ln -sf "$source" "$target"
-            printf 'relinked: %s -> %s\n' "$target" "$source"
+            mv "$target" "$backup" || return 1
+            ln -s "$source" "$target" || return 1
+            printf 'linked: %s -> %s (backup: %s)\n' "$target" "$source" "$backup"
         fi
         return 0
     fi
@@ -108,8 +114,8 @@ setup_link() {
             if [[ "$dry_run" == true ]]; then
                 printf 'would replace identical file: %s -> %s\n' "$target" "$source"
             else
-                rm "$target"
-                ln -s "$source" "$target"
+                rm "$target" || return 1
+                ln -s "$source" "$target" || return 1
                 printf 'linked: %s -> %s (identical, no backup)\n' "$target" "$source"
             fi
             return 0
@@ -120,8 +126,8 @@ setup_link() {
             printf 'would backup: %s -> %s\n' "$target" "$backup"
             printf 'would link: %s -> %s\n' "$target" "$source"
         else
-            mv "$target" "$backup"
-            ln -s "$source" "$target"
+            mv "$target" "$backup" || return 1
+            ln -s "$source" "$target" || return 1
             printf 'linked: %s -> %s (backup: %s)\n' "$target" "$source" "$backup"
         fi
         return 0
@@ -130,7 +136,7 @@ setup_link() {
     if [[ "$dry_run" == true ]]; then
         printf 'would link: %s -> %s\n' "$target" "$source"
     else
-        ln -s "$source" "$target"
+        ln -s "$source" "$target" || return 1
         printf 'linked: %s -> %s\n' "$target" "$source"
     fi
 }
@@ -154,9 +160,53 @@ setup_link_status() {
     fi
 }
 
+# Sets SYNC_MATCHED and SYNC_CONFLICT for the declared managed links.
+setup_inspect_module_links() {
+    local entry rel source target actual
+    SYNC_MATCHED=0
+    SYNC_CONFLICT=0
+    for entry in "${MODULE_LINKS[@]}"; do
+        rel="${entry%%|*}"
+        source="$REPO_PATH/$rel"
+        target="${entry##*|}"
+        if [[ ! -e "$source" ]]; then
+            printf 'missing source: %s\n' "$source" >&2
+            return 1
+        fi
+        if [[ -L "$target" ]]; then
+            actual="$(readlink "$target")" || return 1
+            if [[ "$actual" == "$source" ]]; then
+                ((SYNC_MATCHED+=1))
+            else
+                SYNC_CONFLICT=1
+            fi
+        elif [[ -e "$target" ]]; then
+            SYNC_CONFLICT=1
+        fi
+    done
+}
+
+setup_print_sync_status() {
+    if (( SYNC_CONFLICT )); then
+        printf 'drifted\n'
+    elif (( SYNC_MATCHED == ${#MODULE_LINKS[@]} )); then
+        printf 'synced\n'
+    elif (( SYNC_MATCHED == 0 )); then
+        printf 'not-synced\n'
+    else
+        printf 'drifted\n'
+    fi
+}
+
 setup_module_links() {
     local entry rel source target
     local errors=0
+
+    if $SYNC_STATUS; then
+        setup_inspect_module_links
+        setup_print_sync_status
+        return
+    fi
 
     for entry in "${MODULE_LINKS[@]}"; do
         rel="${entry%%|*}"
