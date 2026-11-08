@@ -11,7 +11,7 @@ Personal dotfiles for an Omarchy (Arch + Hyprland) machine. Configuration is dep
 
 ## Directory ownership
 
-- `agents/` — harness-agnostic AI agent config: instruction file + `agents/skills/*` (linked into `~/.agent/skills`, `~/.config/opencode/skills`, and Pi's global context/skills paths).
+- `agents/` — shared AI agent instructions and skills, linked into OpenCode, OMP, Pi, and `~/.agents/`.
 - `pi/` — Pi settings and custom subagent definitions, linked into `~/.pi/agent/`.
 - `hypr/` — Hyprland config. `hypr/monitors.lua` is gitignored on purpose (per-device); never commit it.
 - `waybar/` — custom waybar; `indicators/scratchpad-listener.sh` is a background daemon (needs `socat` + a live Hyprland session; setup script skips it otherwise). Restart waybar with `omarchy-restart-waybar`. Omarchy upstream defaults live at `~/.local/share/omarchy/config/waybar/` — diff against them after `omarchy-update`.
@@ -26,4 +26,4 @@ Personal dotfiles for an Omarchy (Arch + Hyprland) machine. Configuration is dep
 ## Conventions
 
 - Commits use conventional-commit style with the directory as scope: `feat(nvim): ...`, `fix(agents): ...`, `feat(setup): ...`.
-- Behavioral agent rules (response style, plan mode, PR workflow) live in the instruction file under `agents/` deployed to `~/.config/opencode/AGENTS.md` — repo-structure guidance belongs here instead.
+- Behavioral agent rules (response style, plan mode, PR workflow) live in the shared instruction file under `agents/` — repo-structure guidance belongs here instead.

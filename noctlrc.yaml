@@ -47,6 +47,7 @@ modules:
       - source: agents/AGENTS.md
         targets:
           - ~/.config/opencode/AGENTS.md
+          - ~/.omp/agent/AGENTS.md
       - source: agents/skills
         targets:
           - ~/.agents/skills

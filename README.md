@@ -49,9 +49,12 @@ before replacement; identical files are linked without a backup.
 | `tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
 | `herdr/config.toml` | `~/.config/herdr/config.toml` |
 | `omarchy/branding/` | `~/.config/omarchy/branding` |
-| `agents/` | `~/.config/opencode/AGENTS.md` + skills in `~/.agent/skills`, `~/.config/opencode/skills`, `~/.pi/agent/AGENTS.md`, `~/.pi/agent/skills` |
+| `agents/` | Shared instructions in `~/.config/opencode/AGENTS.md`, `~/.agents/AGENTS.md`, `~/.omp/agent/AGENTS.md`, and `~/.pi/agent/AGENTS.md`; skills in `~/.agents/skills`, `~/.config/opencode/skills`, and `~/.pi/agent/skills` |
 | `pi/` | `~/.pi/agent/settings.json` + custom subagents in `~/.pi/agent/agents` |
 | `shell/` | `~/.config/dotfile/shell` (shell profiles source personal settings) |
+
+OMP loads the shared instructions when a new default-profile session starts.
+OMP task subagents do not inherit `AGENTS.md`.
 
 ## Hyprland
 
