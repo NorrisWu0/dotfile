@@ -26,7 +26,7 @@ REPO_PATH="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 DRY_RUN=false
 STATUS=false
 ALL=false
-MODULES=(hypr waybar nvim tmux herdr omarchy agents pi shell)
+MODULES=(nvim tmux herdr agents pi shell)
 SELECTED=()
 
 while [[ $# -gt 0 ]]; do

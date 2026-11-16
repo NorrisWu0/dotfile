@@ -27,8 +27,8 @@ For non-interactive selection:
 
 ```bash
 ./setup-dotfile.sh --status                 # Status of every module
-./setup-dotfile.sh --module hypr --dry-run  # Preview one module
-./setup-dotfile.sh --module hypr            # Set up one module
+./setup-dotfile.sh --module nvim --dry-run  # Preview one module
+./setup-dotfile.sh --module nvim            # Set up one module
 ./setup-dotfile.sh --all --dry-run          # Preview all modules
 ```
 
@@ -38,7 +38,7 @@ git, tmux, and mise. It supports Omarchy/Arch and apt-based systems; the devbox
 already has mise's apt repository configured.
 `--dry-run` and `--status` never install tools or ask this question.
 
-The `agents`, `herdr`, and `nvim` adapters delegate to mise's declarative dotfiles
+The `agents`, `herdr`, `nvim`, and `tmux` adapters delegate to mise's declarative dotfiles
 configuration. They refuse conflicting existing files, directories, and symlinks;
 review and move those aside yourself before applying. They never pass `--force`.
 Shell's mise folder fragment also refuses conflicts. Other links retain their
@@ -47,12 +47,9 @@ existing behavior: differing files and symlinks are backed up to
 
 | Package | Symlink |
 | --------- | --------- |
-| `hypr/looknfeel.lua` | `~/.config/hypr/looknfeel.lua` |
-| `waybar/` | `~/.config/waybar` |
 | `nvim/` | `~/.config/nvim` |
 | `tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
 | `herdr/config.toml` | `~/.config/herdr/config.toml` |
-| `omarchy/branding/` | `~/.config/omarchy/branding` |
 | `agents/` | Shared instructions in `~/.config/opencode/AGENTS.md`, `~/.agents/AGENTS.md`, `~/.omp/agent/AGENTS.md`, and `~/.pi/agent/AGENTS.md`; skills in `~/.agents/skills`, `~/.config/opencode/skills`, `~/.pi/agent/skills`, and `~/.claude/skills` |
 | `pi/` | `~/.pi/agent/settings.json` + custom subagents in `~/.pi/agent/agents` |
 | `shell/` | `~/.config/dotfile/shell` (shell profiles source personal settings) |
@@ -104,10 +101,12 @@ reruns. See mise's [dotfiles guide](https://mise.jdx.dev/dotfiles.html),
 [reference](https://mise.jdx.dev/dotfiles/reference.html), and
 [template variables](https://mise.jdx.dev/templates.html#variables).
 
-## Hyprland
+## OS-specific configuration
 
-The appearance override sets window gaps to zero and borders to 1px. All other
-settings come from Omarchy. Monitor configuration remains per-device.
+Omarchy desktop files live under [`os/omarchy/`](os/omarchy/README.md).
+They are manual-only: the setup menu, `--all`, the legacy manifest, and mise
+profile deployment do not apply Hyprland, Waybar, or branding configuration.
+Existing desktop symlinks must point to the relocated files.
 
 ## Shell
 
@@ -116,7 +115,7 @@ to the selected Bash or Zsh profiles. Existing profile contents and Omarchy
 defaults are preserved; existing profiles are backed up before editing.
 Rerunning setup does not add the line twice. `--dry-run` previews both profiles,
 and `--status` checks the managed links and source lines.
-The legacy `noctlrc.yaml` manifest creates only the remaining desktop/shell links
+The legacy `noctlrc.yaml` manifest creates only the shell link
 and the mise folder fragment; it does not apply these profiles, add shell
 profile source lines, or retire the old global file link. Use shell setup for migration.
 
@@ -143,34 +142,10 @@ Run `tools-check` (or `mise ls --current`) to see requested versions and which
 are missing. Git, SSH, Tailscale, and tmux remain system-managed; credentials
 stay outside the tool configuration.
 
-Each configuration directory owns a `setup.sh` adapter. The root setup script
-resolves the repository path, then delegates to `hypr/setup.sh`,
-`waybar/setup.sh`, `nvim/setup.sh`, `tmux/setup.sh`, `herdr/setup.sh`,
-`omarchy/setup.sh`,
+Each portable configuration directory owns a `setup.sh` adapter. The root setup
+script delegates to `nvim/setup.sh`, `tmux/setup.sh`, `herdr/setup.sh`,
 `agents/setup.sh`, `pi/setup.sh`, and `shell/setup.sh`.
 
-
-## Waybar (Omarchy)
-
-Custom waybar config with expanded system metrics:
-
-- All tray icons visible (no hidden drawer)
-- CPU/memory usage percentages
-- Battery with percentage and wattage (↑ charging, ↓ discharging)
-- Clock: `YYYY MMM DD Day HH:MM`
-- Scratchpad indicator (auto-started via `hypr/autostart.conf`)
-
-**Dependencies:**
-
-```bash
-sudo pacman -S socat  # required by scratchpad-listener.sh
-```
-
-```bash
-omarchy-restart-waybar
-```
-
-**Syncing with upstream:** Omarchy defaults live at `~/.local/share/omarchy/config/waybar/`. After `omarchy-update`, diff against defaults and merge new features as needed.
 
 ## Tmux
 

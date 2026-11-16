@@ -3,7 +3,7 @@ claude/plugins
 
 # Hyprland
 # Keep monitor configuration per-device.
-hypr/monitors.lua
+os/omarchy/hypr/monitors.lua
 
 # Local deployment backups
 *.orig

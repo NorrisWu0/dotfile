@@ -1,29 +1,5 @@
 version: 1
 modules:
-  - name: hypr
-    links:
-      - source: hypr/looknfeel.lua
-        targets:
-          - ~/.config/hypr/looknfeel.lua
-
-  - name: waybar
-    links:
-      - source: waybar/config.jsonc
-        targets:
-          - ~/.config/waybar/config.jsonc
-      - source: waybar/style.css
-        targets:
-          - ~/.config/waybar/style.css
-
-  - name: omarchy
-    links:
-      - source: omarchy/branding/about.txt
-        targets:
-          - ~/.config/omarchy/branding/about.txt
-      - source: omarchy/branding/screensaver.txt
-        targets:
-          - ~/.config/omarchy/branding/screensaver.txt
-
   - name: shell
     links:
       - source: shell

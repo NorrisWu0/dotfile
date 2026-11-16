@@ -18,7 +18,7 @@ export MISE_STATE_DIR="$work/state/mise"
 export MISE_TRUSTED_CONFIG_PATHS="$repo"
 export MISE_CEILING_PATHS="$(dirname "$repo")"
 export MISE_AUTO_INSTALL_DISABLE=1
-mkdir -p "$HOME/.config/hypr"
+mkdir -p "$HOME/.config"
 
 status() {
     bash "$repo/$1/setup.sh" --repo-path "$repo" --sync-status
@@ -33,21 +33,13 @@ expect_status() {
     fi
 }
 
-expect_status hypr not-synced
-printf 'user config\n' > "$HOME/.config/hypr/looknfeel.lua"
-expect_status hypr drifted
-rm "$HOME/.config/hypr/looknfeel.lua"
-ln -s "$repo/hypr/looknfeel.lua" "$HOME/.config/hypr/looknfeel.lua"
-expect_status hypr synced
-ln -s "$repo/hypr/bindings.conf" "$HOME/.config/hypr/bindings.conf"
-expect_status hypr drifted
-
-mkdir -p "$HOME/.config/omarchy/branding"
-expect_status omarchy not-synced
-ln -s "$repo/omarchy/branding/about.txt" "$HOME/.config/omarchy/branding/about.txt"
-expect_status omarchy drifted
-ln -s "$repo/omarchy/branding/screensaver.txt" "$HOME/.config/omarchy/branding/screensaver.txt"
-expect_status omarchy synced
+# Desktop modules are deliberately unavailable, including explicit selection.
+for module in hypr waybar omarchy; do
+    if bash "$repo/setup-dotfile.sh" --module "$module" --dry-run >/dev/null 2>&1; then
+        printf 'Desktop module unexpectedly accepted: %s\n' "$module" >&2
+        exit 1
+    fi
+done
 
 expect_status shell not-synced
 mkdir -p "$HOME/.config/dotfile"
@@ -105,7 +97,7 @@ output="$(printf 'q\n' | bash "$repo/setup-dotfile.sh" --repo-path "$repo")"
 mkdir -p "$HOME/.config/tmux"
 printf 'original\n' > "$work/original"
 ln -s "$work/original" "$HOME/.config/tmux/tmux.conf"
-if printf '4\n' | bash "$repo/setup-dotfile.sh" --repo-path "$repo" >/dev/null 2>&1; then
+if printf '2\n' | bash "$repo/setup-dotfile.sh" --repo-path "$repo" >/dev/null 2>&1; then
     printf 'Tmux setup unexpectedly replaced a conflicting link\n' >&2
     exit 1
 fi
