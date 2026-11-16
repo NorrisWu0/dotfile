@@ -15,24 +15,6 @@ modules:
         targets:
           - ~/.config/waybar/style.css
 
-  - name: nvim
-    links:
-      - source: nvim
-        targets:
-          - ~/.config/nvim
-
-  - name: tmux
-    links:
-      - source: tmux/tmux.conf
-        targets:
-          - ~/.config/tmux/tmux.conf
-
-  - name: herdr
-    links:
-      - source: herdr/config.toml
-        targets:
-          - ~/.config/herdr/config.toml
-
   - name: omarchy
     links:
       - source: omarchy/branding/about.txt
@@ -42,22 +24,11 @@ modules:
         targets:
           - ~/.config/omarchy/branding/screensaver.txt
 
-  - name: agents
-    links:
-      - source: agents/AGENTS.md
-        targets:
-          - ~/.config/opencode/AGENTS.md
-          - ~/.omp/agent/AGENTS.md
-      - source: agents/skills
-        targets:
-          - ~/.agents/skills
-          - ~/.config/opencode/skills
-
   - name: shell
     links:
       - source: shell
         targets:
           - ~/.config/dotfile/shell
-      - source: mise.toml
+      - source: .
         targets:
-          - ~/.config/mise/config.toml
+          - ~/.config/mise/conf.d/dotfile

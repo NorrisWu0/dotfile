@@ -17,3 +17,24 @@ herdr = "0.9.5"
 claude-code = "2.1.325"
 oh-my-pi = "18.20.2"
 opencode = "2.3.0"
+
+[vars]
+# Resolve the physical checkout for tasks loaded through the conf.d folder link.
+dotfile_root = "{{ config_source | canonicalize | dirname }}"
+
+[dotfiles]
+"~/.config/opencode/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
+"~/.omp/agent/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
+"~/.agents/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
+"~/.pi/agent/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
+"~/.config/opencode/skills" = { source = "agents/skills", mode = "symlink" }
+"~/.agents/skills" = { source = "agents/skills", mode = "symlink" }
+"~/.pi/agent/skills" = { source = "agents/skills", mode = "symlink" }
+"~/.claude/skills" = { source = "agents/skills", mode = "symlink" }
+"~/.config/herdr/config.toml" = { source = "herdr/config.toml", mode = "symlink" }
+"~/.config/nvim" = { source = "nvim", mode = "symlink" }
+"~/.config/tmux/tmux.conf" = { source = "tmux/tmux.conf", mode = "symlink" }
+
+[tasks.herdr-plugins]
+description = "Install missing plugins declared in herdr/plugins.yaml"
+run = "bash {{ vars.dotfile_root | quote }}/herdr/sync-plugins.sh"

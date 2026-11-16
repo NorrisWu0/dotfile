@@ -38,8 +38,12 @@ git, tmux, and mise. It supports Omarchy/Arch and apt-based systems; the devbox
 already has mise's apt repository configured.
 `--dry-run` and `--status` never install tools or ask this question.
 
-Differing existing files and symlinks are backed up to `.bak-YYYYMMDDHHMMSS`
-before replacement; identical files are linked without a backup.
+The `agents`, `herdr`, and `nvim` adapters delegate to mise's declarative dotfiles
+configuration. They refuse conflicting existing files, directories, and symlinks;
+review and move those aside yourself before applying. They never pass `--force`.
+Shell's mise folder fragment also refuses conflicts. Other links retain their
+existing behavior: differing files and symlinks are backed up to
+`.bak-YYYYMMDDHHMMSS` before replacement; identical files are linked without a backup.
 
 | Package | Symlink |
 | --------- | --------- |
@@ -49,13 +53,56 @@ before replacement; identical files are linked without a backup.
 | `tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
 | `herdr/config.toml` | `~/.config/herdr/config.toml` |
 | `omarchy/branding/` | `~/.config/omarchy/branding` |
-| `agents/` | Shared instructions in `~/.config/opencode/AGENTS.md`, `~/.agents/AGENTS.md`, `~/.omp/agent/AGENTS.md`, and `~/.pi/agent/AGENTS.md`; skills in `~/.agents/skills`, `~/.config/opencode/skills`, and `~/.pi/agent/skills` |
+| `agents/` | Shared instructions in `~/.config/opencode/AGENTS.md`, `~/.agents/AGENTS.md`, `~/.omp/agent/AGENTS.md`, and `~/.pi/agent/AGENTS.md`; skills in `~/.agents/skills`, `~/.config/opencode/skills`, `~/.pi/agent/skills`, and `~/.claude/skills` |
 | `pi/` | `~/.pi/agent/settings.json` + custom subagents in `~/.pi/agent/agents` |
 | `shell/` | `~/.config/dotfile/shell` (shell profiles source personal settings) |
-| `mise.toml` | `~/.config/mise/config.toml` (part of shell setup) |
+| Repository root | `~/.config/mise/conf.d/dotfile` (mise folder fragment, part of shell setup) |
 
 OMP loads the shared instructions when a new default-profile session starts.
 OMP task subagents do not inherit `AGENTS.md`.
+
+## Mise profiles
+
+The agent instruction/skill, Herdr, Neovim, and tmux configuration links are declared
+only in the root `mise.toml` under `[dotfiles]`, with explicit `symlink` mode.
+Install mise itself first, then install the pinned tools before applying profiles:
+
+```bash
+mise trust ./mise.toml
+mise install
+mise dot status
+mise dot apply --dry-run
+mise dot apply --yes
+mise run herdr-plugins
+```
+
+From elsewhere, use `mise -C ~/git/norriswu0/dotfile dot apply --yes` (and the
+same `-C` for status or tasks). The module menu still supports selecting just
+`agents`, `herdr`, `nvim`, or `tmux`; these adapters discover their targets from mise,
+so they do not maintain a second link list. Herdr setup also synchronizes plugins
+after its config link is applied. Status only describes the config links.
+
+Shell setup registers the checkout directory as
+`~/.config/mise/conf.d/dotfile`, a mise
+[folder fragment](https://mise.jdx.dev/configuration.html#conf-d-folders).
+The fragment loads its own `mise.toml` beside the source directories, so plain
+relative dotfile sources work both globally and with `-C` inside the checkout.
+The plugin task canonicalizes `config_source` via `vars.dotfile_root` to find
+the physical checkout.
+
+Rerun `./shell/setup.sh --repo-path "$PWD"` to migrate the previous setup.
+It removes `~/.config/mise/config.toml` only if that file is a symlink resolving
+to this checkout's `mise.toml`. Independent global files and links remain
+untouched, and a conflicting `conf.d/dotfile` is refused rather than replaced.
+Do not set `MISE_GLOBAL_CONFIG_FILE` for this layout: that override disables
+global fragment discovery.
+
+These declarations deploy repository files only. They do not track application
+history, sessions, caches, plugin installations, local configuration, credentials,
+or other live runtime data. Existing non-conflicting links remain unchanged on
+reruns. See mise's [dotfiles guide](https://mise.jdx.dev/dotfiles.html),
+[reference](https://mise.jdx.dev/dotfiles/reference.html), and
+[template variables](https://mise.jdx.dev/templates.html#variables).
 
 ## Hyprland
 
@@ -69,15 +116,17 @@ to the selected Bash or Zsh profiles. Existing profile contents and Omarchy
 defaults are preserved; existing profiles are backed up before editing.
 Rerunning setup does not add the line twice. `--dry-run` previews both profiles,
 and `--status` checks the managed links and source lines.
-The `noctlrc.yaml` manifest only creates the links; run shell setup to add the
-profile source lines.
+The legacy `noctlrc.yaml` manifest creates only the remaining desktop/shell links
+and the mise folder fragment; it does not apply these profiles, add shell
+profile source lines, or retire the old global file link. Use shell setup for migration.
 
 Personal aliases live in `shell/alias.conf`. `shell/tools.conf` activates mise
 and initializes zoxide when needed. Mise replaces nvm for Node.js management.
 
 The root `mise.toml` pins personal CLI tools and language runtimes to exact
-versions. Shell setup links it as global configuration, backing up any differing
-existing file. Project-specific `mise.toml` files can override these versions.
+versions. Shell setup registers its containing folder as global configuration
+without replacing an independent `~/.config/mise/config.toml`.
+Project-specific `mise.toml` files can override these versions.
 
 The baseline also installs Herdr and the AI CLIs: Claude Code (`claude`),
 oh-my-pi (`omp`), and OpenCode (`opencode`).
@@ -138,7 +187,30 @@ Start or reload tmux, then press `Ctrl-Space` followed by `I` to install the con
 
 ## Herdr
 
-`herdr/config.toml` uses a `ctrl+space` prefix with tmux-style bindings (alt+arrows for workspace/tab nav, alt+enter/alt+shift+enter splits, ctrl+alt+arrows pane focus). Plugins are declared in `herdr/plugins.yaml` and synced by `herdr/setup.sh` via `herdr plugin install` — add one `owner/repo[/subdir]` per line and rerun setup.
+`herdr/config.toml` uses a `ctrl+space` prefix with tmux-style bindings (alt+arrows for workspace/tab nav, alt+enter/alt+shift+enter splits, ctrl+alt+arrows pane focus). Plugins are declared in `herdr/plugins.yaml` — add one trusted `owner/repo[/subdir]` per entry.
+
+Run `mise run herdr-plugins` to install missing plugins, or
+`bash herdr/sync-plugins.sh --dry-run` to preview the declarations without listing
+or installing plugins. The standalone script uses only `herdr plugin list --json`
+and `herdr plugin install <source> --yes`; it never starts, stops, or reloads a
+session. Already installed sources (including their subdirectory) are skipped.
+Plugin listing and installation errors fail setup instead of reporting success.
+Missing `herdr`, `jq`, or Mike Farah's `yq` is an error; `mise install` supplies
+the pinned versions. Plugin config/state remain outside the repository.
+
+## Setup contract checks
+
+With mise, jq, and Mike Farah's yq available:
+
+```bash
+mise exec -- bash tests/setup-adapters.sh
+mise exec -- bash tests/herdr-plugins.sh
+```
+
+The adapter checks use an isolated home and mise state with the real mise CLI,
+including folder-fragment discovery, selective apply, reruns, old-file-link
+migration, and conflict preservation. The plugin checks exercise list/install behavior with a controlled
+Herdr executable; they do not install third-party code or touch running sessions.
 
 ## Claude Code
 

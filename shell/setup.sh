@@ -6,8 +6,52 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lib/setup.sh"
 setup_parse_args "$@"
 MODULE_LINKS=(
     "shell|$HOME/.config/dotfile/shell"
-    "mise.toml|$HOME/.config/mise/config.toml"
 )
+MISE_FRAGMENT="$HOME/.config/mise/conf.d/dotfile"
+MISE_LEGACY_CONFIG="$HOME/.config/mise/config.toml"
+
+legacy_mise_link() {
+    [[ -L "$MISE_LEGACY_CONFIG" ]] &&
+        [[ "$(realpath "$MISE_LEGACY_CONFIG" 2>/dev/null || true)" == "$REPO_PATH/mise.toml" ]]
+}
+
+inspect_mise_fragment() {
+    if [[ -L "$MISE_FRAGMENT" ]] &&
+        [[ "$(realpath "$MISE_FRAGMENT" 2>/dev/null || true)" == "$REPO_PATH" ]]; then
+        ((SYNC_MATCHED+=1))
+    elif [[ -e "$MISE_FRAGMENT" || -L "$MISE_FRAGMENT" ]]; then
+        SYNC_CONFLICT=1
+    fi
+    if legacy_mise_link; then
+        SYNC_CONFLICT=1
+    fi
+}
+
+setup_mise_fragment() {
+    if [[ -L "$MISE_FRAGMENT" ]] &&
+        [[ "$(realpath "$MISE_FRAGMENT" 2>/dev/null || true)" == "$REPO_PATH" ]]; then
+        printf 'already linked: %s -> %s\n' "$MISE_FRAGMENT" "$REPO_PATH"
+    elif [[ -e "$MISE_FRAGMENT" || -L "$MISE_FRAGMENT" ]]; then
+        printf 'conflicting mise folder fragment: %s; review and move it aside before setup\n' "$MISE_FRAGMENT" >&2
+        return 1
+    elif $DRY_RUN; then
+        printf 'would link mise folder fragment: %s -> %s\n' "$MISE_FRAGMENT" "$REPO_PATH"
+    else
+        mkdir -p "$(dirname "$MISE_FRAGMENT")"
+        ln -s "$REPO_PATH" "$MISE_FRAGMENT"
+        printf 'linked mise folder fragment: %s -> %s\n' "$MISE_FRAGMENT" "$REPO_PATH"
+    fi
+
+    # Only retire our old file link, never an independent user configuration.
+    if legacy_mise_link; then
+        if $DRY_RUN; then
+            printf 'would remove legacy mise config link: %s\n' "$MISE_LEGACY_CONFIG"
+        else
+            rm "$MISE_LEGACY_CONFIG"
+            printf 'removed legacy mise config link: %s\n' "$MISE_LEGACY_CONFIG"
+        fi
+    fi
+}
 
 
 shell_hook() {
@@ -20,6 +64,7 @@ shell_hook() {
 
 if $SYNC_STATUS; then
     setup_inspect_module_links
+    inspect_mise_fragment
     hooks=0
     for selected_shell in bash zsh; do
         profile="$HOME/.${selected_shell}rc"
@@ -34,7 +79,7 @@ if $SYNC_STATUS; then
     done
     if (( SYNC_CONFLICT )); then
         printf 'drifted\n'
-    elif (( SYNC_MATCHED == ${#MODULE_LINKS[@]} && hooks )); then
+    elif (( SYNC_MATCHED == ${#MODULE_LINKS[@]} + 1 && hooks )); then
         printf 'synced\n'
     elif (( SYNC_MATCHED || hooks )); then
         printf 'drifted\n'
@@ -46,6 +91,17 @@ fi
 
 if $STATUS; then
     setup_module_links
+    if [[ -L "$MISE_FRAGMENT" ]] &&
+        [[ "$(realpath "$MISE_FRAGMENT" 2>/dev/null || true)" == "$REPO_PATH" ]]; then
+        printf 'ok       %s -> %s\n' "$MISE_FRAGMENT" "$REPO_PATH"
+    elif [[ -e "$MISE_FRAGMENT" || -L "$MISE_FRAGMENT" ]]; then
+        printf 'conflict %s (mise folder fragment)\n' "$MISE_FRAGMENT"
+    else
+        printf 'missing  %s (mise folder fragment)\n' "$MISE_FRAGMENT"
+    fi
+    if legacy_mise_link; then
+        printf 'legacy   %s (will remove old repository file link)\n' "$MISE_LEGACY_CONFIG"
+    fi
     for selected_shell in bash zsh; do
         profile="$HOME/.${selected_shell}rc"
         if [[ -f "$profile" ]] && grep -Fxq -- "$(shell_hook "$selected_shell")" "$profile"; then
@@ -164,6 +220,7 @@ for selected_shell in "${selected_shells[@]}"; do
     shell_hook "$selected_shell" >/dev/null
 done
 
+setup_mise_fragment
 setup_module_links
 for selected_shell in "${selected_shells[@]}"; do
     setup_shell "$selected_shell"
