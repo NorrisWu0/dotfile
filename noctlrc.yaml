@@ -58,3 +58,6 @@ modules:
       - source: shell
         targets:
           - ~/.config/dotfile/shell
+      - source: mise.toml
+        targets:
+          - ~/.config/mise/config.toml

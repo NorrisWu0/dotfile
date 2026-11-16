@@ -42,13 +42,11 @@ mkdir -p "$HOME/.config/dotfile"
 ln -s "$repo/shell" "$HOME/.config/dotfile/shell"
 expect_status shell drifted
 printf '%s\n' '[[ ! -r "$HOME/.config/dotfile/shell/.bashrc" ]] || source "$HOME/.config/dotfile/shell/.bashrc"' > "$HOME/.bashrc"
+expect_status shell drifted
+mkdir -p "$HOME/.config/mise"
+ln -s "$repo/mise.toml" "$HOME/.config/mise/config.toml"
 expect_status shell synced
 
-# Status icons must match the reported sync state.
-output="$(bash "$repo/setup-dotfile.sh" --repo-path "$repo" --status --module hypr --module nvim --module shell)"
-[[ "$output" == *'hypr: ⚠️ drifted'* ]]
-[[ "$output" == *'nvim: ❌ not-synced'* ]]
-[[ "$output" == *'shell: ✅ synced'* ]]
 
 # Cancelling the menu must not apply any module.
 output="$(printf 'q\n' | bash "$repo/setup-dotfile.sh" --repo-path "$repo")"

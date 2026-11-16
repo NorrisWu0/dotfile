@@ -4,6 +4,11 @@ set -euo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/setup.sh"
 setup_parse_args "$@"
+MODULE_LINKS=(
+    "shell|$HOME/.config/dotfile/shell"
+    "mise.toml|$HOME/.config/mise/config.toml"
+)
+
 
 shell_hook() {
     case "$1" in
@@ -14,7 +19,6 @@ shell_hook() {
 }
 
 if $SYNC_STATUS; then
-    MODULE_LINKS=("shell|$HOME/.config/dotfile/shell")
     setup_inspect_module_links
     hooks=0
     for selected_shell in bash zsh; do
@@ -30,7 +34,7 @@ if $SYNC_STATUS; then
     done
     if (( SYNC_CONFLICT )); then
         printf 'drifted\n'
-    elif (( SYNC_MATCHED && hooks )); then
+    elif (( SYNC_MATCHED == ${#MODULE_LINKS[@]} && hooks )); then
         printf 'synced\n'
     elif (( SYNC_MATCHED || hooks )); then
         printf 'drifted\n'
@@ -41,7 +45,7 @@ if $SYNC_STATUS; then
 fi
 
 if $STATUS; then
-    setup_link_status "$REPO_PATH/shell" "$HOME/.config/dotfile/shell"
+    setup_module_links
     for selected_shell in bash zsh; do
         profile="$HOME/.${selected_shell}rc"
         if [[ -f "$profile" ]] && grep -Fxq -- "$(shell_hook "$selected_shell")" "$profile"; then
@@ -160,7 +164,7 @@ for selected_shell in "${selected_shells[@]}"; do
     shell_hook "$selected_shell" >/dev/null
 done
 
-setup_link "$REPO_PATH/shell" "$HOME/.config/dotfile/shell" "$DRY_RUN"
+setup_module_links
 for selected_shell in "${selected_shells[@]}"; do
     setup_shell "$selected_shell"
 done

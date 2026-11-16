@@ -235,10 +235,8 @@ run_module() {
 install_prerequisites() {
     local spec command package reply
     local -a missing_packages=() missing_tools=()
-    local missing_omnictl=false
 
-    for spec in curl:curl jq:jq zoxide:zoxide gh:github-cli tmux:tmux \
-        kubectl:kubectl talosctl:talosctl yq:go-yq; do
+    for spec in curl:curl git:git tmux:tmux mise:mise; do
         command="${spec%%:*}"
         package="${spec#*:}"
         if ! command -v "$command" >/dev/null 2>&1; then
@@ -246,16 +244,6 @@ install_prerequisites() {
             missing_packages+=("$package")
         fi
     done
-    if ! command -v nvm >/dev/null 2>&1 &&
-        [[ ! -r /usr/share/nvm/init-nvm.sh && ! -r "${NVM_DIR:-$HOME/.nvm}/nvm.sh" &&
-           ! -r "${XDG_CONFIG_HOME:-$HOME/.config}/nvm/nvm.sh" ]]; then
-        missing_tools+=(nvm)
-        missing_packages+=(nvm)
-    fi
-    if ! command -v omnictl >/dev/null 2>&1 && [[ ! -x "$HOME/.local/bin/omnictl" ]]; then
-        missing_tools+=(omnictl)
-        missing_omnictl=true
-    fi
 
     section "Prerequisites"
     if ((${#missing_tools[@]})); then
@@ -283,13 +271,12 @@ install_prerequisites() {
             omarchy pkg add "${missing_packages[@]}" || return 1
         elif command -v pacman >/dev/null 2>&1; then
             sudo pacman -S --needed -- "${missing_packages[@]}" || return 1
+        elif command -v apt-get >/dev/null 2>&1; then
+            sudo apt-get install --yes -- "${missing_packages[@]}" || return 1
         else
-            err "Installing prerequisites requires Omarchy or Arch Linux."
+            err "Install curl, git, tmux, and mise before continuing."
             return 1
         fi
-    fi
-    if $missing_omnictl; then
-        bash "$REPO_PATH/shell/install-omnictl.sh" || return 1
     fi
 }
 

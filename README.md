@@ -33,10 +33,10 @@ For non-interactive selection:
 ```
 
 `--module` can be repeated; `--all` selects every module. When the shell module
-is selected, setup asks whether to install missing prerequisites. Choose `y` to
-install missing tools on Omarchy/Arch Linux, or `n` to skip. It covers curl, jq, zoxide, nvm, gh, tmux,
-kubectl, talosctl, yq and omnictl. `--dry-run` and `--status` never install
-tools or ask this question.
+is selected, setup asks whether to install missing system prerequisites: curl,
+git, tmux, and mise. It supports Omarchy/Arch and apt-based systems; the devbox
+already has mise's apt repository configured.
+`--dry-run` and `--status` never install tools or ask this question.
 
 Differing existing files and symlinks are backed up to `.bak-YYYYMMDDHHMMSS`
 before replacement; identical files are linked without a backup.
@@ -52,6 +52,7 @@ before replacement; identical files are linked without a backup.
 | `agents/` | Shared instructions in `~/.config/opencode/AGENTS.md`, `~/.agents/AGENTS.md`, `~/.omp/agent/AGENTS.md`, and `~/.pi/agent/AGENTS.md`; skills in `~/.agents/skills`, `~/.config/opencode/skills`, and `~/.pi/agent/skills` |
 | `pi/` | `~/.pi/agent/settings.json` + custom subagents in `~/.pi/agent/agents` |
 | `shell/` | `~/.config/dotfile/shell` (shell profiles source personal settings) |
+| `mise.toml` | `~/.config/mise/config.toml` (part of shell setup) |
 
 OMP loads the shared instructions when a new default-profile session starts.
 OMP task subagents do not inherit `AGENTS.md`.
@@ -67,18 +68,31 @@ Shell setup links `shell/` to `~/.config/dotfile/shell` and adds a source line
 to the selected Bash or Zsh profiles. Existing profile contents and Omarchy
 defaults are preserved; existing profiles are backed up before editing.
 Rerunning setup does not add the line twice. `--dry-run` previews both profiles,
-and `--status` checks the link and source lines.
-The `noctlrc.yaml` manifest only creates the link; run shell setup to add the
+and `--status` checks the managed links and source lines.
+The `noctlrc.yaml` manifest only creates the links; run shell setup to add the
 profile source lines.
 
-Personal aliases live in `shell/alias.conf`. `shell/tools.conf` initializes
-zoxide and nvm only when they have not already been initialized. Run
-`tools-check` to check the tools listed in `shell/tools.yaml`; this command
-requires `yq`.
+Personal aliases live in `shell/alias.conf`. `shell/tools.conf` activates mise
+and initializes zoxide when needed. Mise replaces nvm for Node.js management.
 
-Prerequisite installation includes `omnictl` v1.9.1 from GitHub, with a
-SHA-256 checksum check. To install it independently, run
-`bash shell/install-omnictl.sh`; add `--dry-run` to preview.
+The root `mise.toml` pins personal CLI tools and language runtimes to exact
+versions. Shell setup links it as global configuration, backing up any differing
+existing file. Project-specific `mise.toml` files can override these versions.
+
+The baseline also installs Herdr and the AI CLIs: Claude Code (`claude`),
+oh-my-pi (`omp`), and OpenCode (`opencode`).
+
+After shell setup, install the pinned tools:
+
+```bash
+mise trust ./mise.toml
+mise install
+exec "$SHELL"
+```
+
+Run `tools-check` (or `mise ls --current`) to see requested versions and which
+are missing. Git, SSH, Tailscale, and tmux remain system-managed; credentials
+stay outside the tool configuration.
 
 Each configuration directory owns a `setup.sh` adapter. The root setup script
 resolves the repository path, then delegates to `hypr/setup.sh`,
@@ -86,7 +100,6 @@ resolves the repository path, then delegates to `hypr/setup.sh`,
 `omarchy/setup.sh`,
 `agents/setup.sh`, `pi/setup.sh`, and `shell/setup.sh`.
 
-Shell startup does not require `yq`; it is only needed by `tools-check`.
 
 ## Waybar (Omarchy)
 
