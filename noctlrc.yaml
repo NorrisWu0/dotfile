@@ -2,9 +2,6 @@ version: 1
 modules:
   - name: shell
     links:
-      - source: shell
-        targets:
-          - ~/.config/dotfile/shell
       - source: .
         targets:
           - ~/.config/mise/conf.d/dotfile

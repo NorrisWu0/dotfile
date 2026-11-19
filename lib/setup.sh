@@ -223,8 +223,8 @@ setup_module_links() {
     return "$errors"
 }
 
-# Discover a migrated module's targets from mise; its declarations are the only
-# link inventory. Legacy desktop/shell modules still use setup_module_links.
+# Discover module files by source directory and associated edits by their
+# module-prefixed IDs in the same declaring config. Mise owns the only inventory.
 setup_mise_module() {
     local module="$1" tool inventory entries targets_text state
     local -a targets=() args=(dot apply --yes)
@@ -237,9 +237,14 @@ setup_mise_module() {
     done
 
     inventory="$(mise -C "$REPO_PATH" dot status --json)" || return 1
-    entries="$(jq -ce --arg source "$REPO_PATH/$module" '
+    entries="$(jq -ce --arg source "$REPO_PATH/$module" --arg module "$module" '
         [.files[] | select(.origin.source != null) |
-            select(.origin.source == $source or (.origin.source | startswith($source + "/")))]
+            select(.origin.source == $source or (.origin.source | startswith($source + "/")))] as $files
+        | ($files | map(.origin.config) | unique) as $configs
+        | $files + [.edits[] |
+            select(.origin.config as $config | $configs | index($config)) |
+            select(.edit | split(":")[1] | startswith($module + ".")) |
+            . + {target: .path, is_edit: true}]
         | if length == 0 then error("no dotfile declarations for module")
           elif any(.[]; .state == "source_missing") then error("module source missing")
           elif any(.[]; .state != "applied" and .state != "missing" and .state != "differs")
@@ -262,7 +267,7 @@ setup_mise_module() {
     else
         if $DRY_RUN; then
             args+=(--dry-run)
-        elif jq -e 'any(.[]; .state == "differs")' <<< "$entries" >/dev/null; then
+        elif jq -e 'any(.[]; .is_edit != true and .state == "differs")' <<< "$entries" >/dev/null; then
             printf 'Conflicting %s configuration; review and move it aside before applying\n' "$module" >&2
             return 1
         fi

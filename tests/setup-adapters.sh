@@ -45,7 +45,12 @@ expect_status shell not-synced
 mkdir -p "$HOME/.config/dotfile"
 ln -s "$repo/shell" "$HOME/.config/dotfile/shell"
 expect_status shell drifted
-printf '%s\n' '[[ ! -r "$HOME/.config/dotfile/shell/.bashrc" ]] || source "$HOME/.config/dotfile/shell/.bashrc"' > "$HOME/.bashrc"
+bash_hook='[[ ! -r "$HOME/.config/dotfile/shell/.bashrc" ]] || source "$HOME/.config/dotfile/shell/.bashrc"'
+zsh_hook='[[ ! -r "$HOME/.config/dotfile/shell/.zshrc" ]] || source "$HOME/.config/dotfile/shell/.zshrc"'
+printf '%s\n' '# personal Bash settings' 'export KEEP_BASH=1' "$bash_hook" > "$HOME/.bashrc"
+cp "$HOME/.bashrc" "$work/bash-profile"
+printf '%s\n' '# personal Zsh settings' 'export KEEP_ZSH=1' > "$HOME/.zshrc"
+cp "$HOME/.zshrc" "$work/zsh-original"
 expect_status shell drifted
 mkdir -p "$HOME/.config/mise"
 ln -s "$repo/mise.toml" "$HOME/.config/mise/config.toml"
@@ -53,23 +58,55 @@ expect_status shell drifted
 bash "$repo/shell/setup.sh" --repo-path "$repo" --dry-run >/dev/null
 [[ -L "$HOME/.config/mise/config.toml" ]]
 [[ ! -e "$HOME/.config/mise/conf.d/dotfile" ]]
-printf 'bash\n' | bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null
+cmp -s "$HOME/.bashrc" "$work/bash-profile"
+cmp -s "$HOME/.zshrc" "$work/zsh-original"
+bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null
 [[ ! -e "$HOME/.config/mise/config.toml" && ! -L "$HOME/.config/mise/config.toml" ]]
 [[ -L "$HOME/.config/mise/conf.d/dotfile" ]]
 [[ "$(readlink -f "$HOME/.config/mise/conf.d/dotfile")" == "$repo" ]]
 expect_status shell synced
-printf 'bash\n' | bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null
+cmp -s "$HOME/.bashrc" "$work/bash-profile"
+[[ "$(grep -Fxc -- "$zsh_hook" "$HOME/.zshrc")" == 1 ]]
+grep -Fxq 'export KEEP_ZSH=1' "$HOME/.zshrc"
+cp "$HOME/.zshrc" "$work/zsh-profile"
+bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null
 expect_status shell synced
+cmp -s "$HOME/.bashrc" "$work/bash-profile"
+cmp -s "$HOME/.zshrc" "$work/zsh-profile"
+[[ ! -e "$HOME/.config/nvim" && ! -e "$HOME/.agents/AGENTS.md" ]]
+
+# Losing either declared hook is drift; repairing it preserves personal settings.
+cp "$work/zsh-original" "$HOME/.zshrc"
+expect_status shell drifted
+bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null
+expect_status shell synced
+cmp -s "$HOME/.zshrc" "$work/zsh-profile"
+
+# Profile symlinks are conflicts, not permission to change another config.
+rm "$HOME/.zshrc"
+cp "$work/zsh-original" "$work/linked-zsh"
+ln -s "$work/linked-zsh" "$HOME/.zshrc"
+expect_status shell drifted
+if bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null 2>&1; then
+    printf 'Shell setup unexpectedly edited a linked profile\n' >&2
+    exit 1
+fi
+[[ "$(readlink "$HOME/.zshrc")" == "$work/linked-zsh" ]]
+cmp -s "$work/linked-zsh" "$work/zsh-original"
+rm "$HOME/.zshrc"
+cp "$work/zsh-profile" "$HOME/.zshrc"
+expect_status shell synced
+
 
 # Independent global configs, including symlinks, are never retired.
 printf '[vars]\nuser_config = "preserved"\n' > "$work/personal.toml"
 ln -s "$work/personal.toml" "$HOME/.config/mise/config.toml"
-printf 'bash\n' | bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null
+bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null
 [[ "$(readlink "$HOME/.config/mise/config.toml")" == "$work/personal.toml" ]]
 cmp -s "$work/personal.toml" "$HOME/.config/mise/config.toml"
 rm "$HOME/.config/mise/config.toml"
 cp "$work/personal.toml" "$HOME/.config/mise/config.toml"
-printf 'bash\n' | bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null
+bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null
 [[ ! -L "$HOME/.config/mise/config.toml" ]]
 cmp -s "$work/personal.toml" "$HOME/.config/mise/config.toml"
 
@@ -78,14 +115,14 @@ rm "$HOME/.config/mise/conf.d/dotfile"
 mkdir "$HOME/.config/mise/conf.d/dotfile"
 printf 'preserved\n' > "$HOME/.config/mise/conf.d/dotfile/user-file"
 expect_status shell drifted
-if printf 'bash\n' | bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null 2>&1; then
+if bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null 2>&1; then
     printf 'Shell setup unexpectedly replaced a conflicting mise folder\n' >&2
     exit 1
 fi
 [[ "$(cat "$HOME/.config/mise/conf.d/dotfile/user-file")" == preserved ]]
 rm "$HOME/.config/mise/conf.d/dotfile/user-file"
 rmdir "$HOME/.config/mise/conf.d/dotfile"
-printf 'bash\n' | bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null
+bash "$repo/shell/setup.sh" --repo-path "$repo" >/dev/null
 expect_status shell synced
 
 
@@ -158,6 +195,7 @@ expected_links=(
     "herdr/config.toml|$HOME/.config/herdr/config.toml"
     "nvim|$HOME/.config/nvim"
     "tmux/tmux.conf|$HOME/.config/tmux/tmux.conf"
+    "shell|$HOME/.config/dotfile/shell"
 )
 for entry in "${expected_links[@]}"; do
     [[ -L "${entry#*|}" ]]
@@ -169,13 +207,14 @@ done
 mise -C "$work" dot apply --yes >/dev/null
 inventory="$(mise -C "$work" dot status --json)"
 jq -e '
-    (.files | length) == 11 and (.edits | length) == 0 and
-    all(.files[]; .mode == "symlink" and .state == "applied")
+    (.files | length) == 12 and (.edits | length) == 2 and
+    all(.files[]; .mode == "symlink" and .state == "applied") and
+    all(.edits[]; .state == "applied")
 ' <<< "$inventory" >/dev/null
 sources="$(jq -r '.files[].origin.source' <<< "$inventory")"
 while IFS= read -r source; do
     case "$(realpath "$source")" in
-        "$repo/agents/AGENTS.md"|"$repo/agents/skills"|"$repo/herdr/config.toml"|"$repo/nvim"|"$repo/tmux/tmux.conf") ;;
+        "$repo/agents/AGENTS.md"|"$repo/agents/skills"|"$repo/herdr/config.toml"|"$repo/nvim"|"$repo/tmux/tmux.conf"|"$repo/shell") ;;
         *) printf 'Unexpected global dotfile source: %s\n' "$source" >&2; exit 1 ;;
     esac
 done <<< "$sources"

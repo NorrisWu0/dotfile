@@ -38,12 +38,12 @@ git, tmux, and mise. It supports Omarchy/Arch and apt-based systems; the devbox
 already has mise's apt repository configured.
 `--dry-run` and `--status` never install tools or ask this question.
 
-The `agents`, `herdr`, `nvim`, and `tmux` adapters delegate to mise's declarative dotfiles
-configuration. They refuse conflicting existing files, directories, and symlinks;
-review and move those aside yourself before applying. They never pass `--force`.
-Shell's mise folder fragment also refuses conflicts. Other links retain their
-existing behavior: differing files and symlinks are backed up to
-`.bak-YYYYMMDDHHMMSS` before replacement; identical files are linked without a backup.
+The `agents`, `herdr`, `nvim`, `tmux`, and `shell` adapters delegate to mise's
+declarative dotfiles configuration. They refuse conflicting existing files,
+directories, and symlinks; review and move those aside yourself before applying.
+They never pass `--force`. Shell profile edits add only missing source lines,
+preserving existing settings. Shell's separate mise folder-fragment bootstrap
+also refuses conflicts.
 
 | Package | Symlink |
 | --------- | --------- |
@@ -60,8 +60,9 @@ OMP task subagents do not inherit `AGENTS.md`.
 
 ## Mise profiles
 
-The agent instruction/skill, Herdr, Neovim, and tmux configuration links are declared
-only in the root `mise.toml` under `[dotfiles]`, with explicit `symlink` mode.
+The agent instruction/skill, Herdr, Neovim, tmux, and shell configuration links
+are declared only in the root `mise.toml` under `[dotfiles]`, with explicit
+`symlink` mode. The same table declares additive Bash and Zsh profile line edits.
 Install mise itself first, then install the pinned tools before applying profiles:
 
 ```bash
@@ -75,9 +76,11 @@ mise run herdr-plugins
 
 From elsewhere, use `mise -C ~/git/norriswu0/dotfile dot apply --yes` (and the
 same `-C` for status or tasks). The module menu still supports selecting just
-`agents`, `herdr`, `nvim`, or `tmux`; these adapters discover their targets from mise,
-so they do not maintain a second link list. Herdr setup also synchronizes plugins
-after its config link is applied. Status only describes the config links.
+`agents`, `herdr`, `nvim`, `tmux`, or `shell`; these adapters discover their targets
+from mise, so they do not maintain a second inventory. Associated edits use
+module-prefixed IDs (for example, `shell.bash`) in the same declaring config.
+Herdr setup also synchronizes plugins after its config link is applied.
+Status describes managed links and edits, not plugin installation.
 
 Shell setup registers the checkout directory as
 `~/.config/mise/conf.d/dotfile`, a mise
@@ -110,17 +113,21 @@ Existing desktop symlinks must point to the relocated files.
 
 ## Shell
 
-Shell setup links `shell/` to `~/.config/dotfile/shell` and adds a source line
-to the selected Bash or Zsh profiles. Existing profile contents and Omarchy
-defaults are preserved; existing profiles are backed up before editing.
-Rerunning setup does not add the line twice. `--dry-run` previews both profiles,
-and `--status` checks the managed links and source lines.
-The legacy `noctlrc.yaml` manifest creates only the shell link
-and the mise folder fragment; it does not apply these profiles, add shell
-profile source lines, or retire the old global file link. Use shell setup for migration.
+Mise links `shell/` to `~/.config/dotfile/shell` and ensures both `~/.bashrc` and
+`~/.zshrc` contain the corresponding source line. Existing profile contents and
+Omarchy defaults are preserved. The exact source lines from previous shell
+setup are reused, so migration and reruns do not duplicate them.
+`--dry-run` previews the link and both edits; `--status` checks all three plus
+the mise fragment. A profile symlink is refused rather than replaced or followed;
+review it and move its contents to a regular profile before applying.
+Shell setup only bootstraps the mise folder fragment and retires the old global
+file link; mise owns shell deployment and profile editing. The legacy
+`noctlrc.yaml` manifest now registers only the fragment. Use shell setup for migration.
 
 Personal aliases live in `shell/alias.conf`. `shell/tools.conf` activates mise
 and initializes zoxide when needed. Mise replaces nvm for Node.js management.
+The `devbox` alias runs `ssh norris@devbox.hoki-sole.ts.net`; additional arguments
+are passed to SSH, for example `devbox hostname`. An existing user alias is kept.
 
 The root `mise.toml` pins personal CLI tools and language runtimes to exact
 versions. Shell setup registers its containing folder as global configuration
@@ -184,8 +191,11 @@ mise exec -- bash tests/herdr-plugins.sh
 
 The adapter checks use an isolated home and mise state with the real mise CLI,
 including folder-fragment discovery, selective apply, reruns, old-file-link
-migration, and conflict preservation. The plugin checks exercise list/install behavior with a controlled
-Herdr executable; they do not install third-party code or touch running sessions.
+migration, exact legacy hook reuse, additive profile preservation, and conflict
+preservation. An interactive Bash startup check exercises the `devbox` alias with
+an SSH stub, including argument forwarding, without connecting to the host.
+The plugin checks exercise list/install behavior with a controlled Herdr
+executable; they do not install third-party code or touch running sessions.
 
 ## Claude Code
 
