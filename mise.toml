@@ -37,6 +37,7 @@ dotfile_root = "{{ config_source | canonicalize | dirname }}"
 "~/.agents/skills" = { source = "agents/skills", mode = "symlink" }
 "~/.pi/agent/skills" = { source = "agents/skills", mode = "symlink" }
 "~/.claude/skills" = { source = "agents/skills", mode = "symlink" }
+"~/.omp/agent/skills" = { source = "agents/skills", mode = "symlink" }
 
 # Pi profile
 "~/.pi/agent/settings.json" = { source = "pi/settings.json", mode = "symlink" }

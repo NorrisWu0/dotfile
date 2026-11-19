@@ -79,6 +79,7 @@ links=(
     '.agents/skills|agents/skills'
     '.pi/agent/skills|agents/skills'
     '.claude/skills|agents/skills'
+    '.omp/agent/skills|agents/skills'
     '.pi/agent/settings.json|pi/settings.json'
     '.pi/agent/agents|pi/agents'
     '.pi/agent/extensions|pi/extensions'
@@ -102,7 +103,7 @@ cmp -s "$HOME/.ssh/config" "$work/ssh-expected"
 # Outside the checkout, only the registered folder fragment supplies this inventory.
 inventory="$("$mise" -C "$work" dot status --json)"
 jq -e '
-    (.files | length) == 17 and (.edits | length) == 3 and
+    (.files | length) == 18 and (.edits | length) == 3 and
     all(.files[]; .mode == "symlink" and .state == "applied") and
     all(.edits[]; .state == "applied")
 ' <<<"$inventory" >/dev/null

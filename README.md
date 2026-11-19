@@ -30,7 +30,7 @@ immediately when edited in this repository.
 | `nvim/` | `~/.config/nvim` |
 | `tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
 | `herdr/config.toml` | `~/.config/herdr/config.toml` |
-| `agents/` | Shared instructions in `~/.config/opencode/AGENTS.md`, `~/.agents/AGENTS.md`, `~/.omp/agent/AGENTS.md`, and `~/.pi/agent/AGENTS.md`; skills in `~/.agents/skills`, `~/.config/opencode/skills`, `~/.pi/agent/skills`, and `~/.claude/skills` |
+| `agents/` | Shared instructions in `~/.config/opencode/AGENTS.md`, `~/.agents/AGENTS.md`, `~/.omp/agent/AGENTS.md`, and `~/.pi/agent/AGENTS.md`; skills in `~/.agents/skills`, `~/.config/opencode/skills`, `~/.pi/agent/skills`, `~/.claude/skills`, and `~/.omp/agent/skills` |
 | `pi/` | Settings, custom subagents, and extensions in `~/.pi/agent/` |
 | `shell/` | `~/.config/dotfile/shell` (shell profiles source personal settings) |
 | `shell/ssh/devbox.conf` | `~/.ssh/config.d/devbox.conf` (included by SSH config on every machine) |
