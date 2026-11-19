@@ -23,6 +23,7 @@ opencode = "2.3.0"
 dotfile_root = "{{ config_source | canonicalize | dirname }}"
 
 [dotfiles]
+"~/.config/mise/conf.d/dotfile" = { source = ".", mode = "symlink" }
 "~/.config/opencode/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
 "~/.omp/agent/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
 "~/.agents/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
@@ -31,10 +32,15 @@ dotfile_root = "{{ config_source | canonicalize | dirname }}"
 "~/.agents/skills" = { source = "agents/skills", mode = "symlink" }
 "~/.pi/agent/skills" = { source = "agents/skills", mode = "symlink" }
 "~/.claude/skills" = { source = "agents/skills", mode = "symlink" }
+"~/.pi/agent/settings.json" = { source = "pi/settings.json", mode = "symlink" }
+"~/.pi/agent/agents" = { source = "pi/agents", mode = "symlink" }
+"~/.pi/agent/extensions" = { source = "pi/extensions", mode = "symlink" }
 "~/.config/herdr/config.toml" = { source = "herdr/config.toml", mode = "symlink" }
 "~/.config/nvim" = { source = "nvim", mode = "symlink" }
 "~/.config/tmux/tmux.conf" = { source = "tmux/tmux.conf", mode = "symlink" }
 "~/.config/dotfile/shell" = { source = "shell", mode = "symlink" }
+"~/.ssh/config.d/devbox.conf" = { source = "shell/ssh/devbox.conf", mode = "symlink" }
+"~/.ssh/config/ssh.devbox" = { line = "Include ~/.ssh/config.d/devbox.conf", position = "prepend" }
 "~/.bashrc/shell.bash" = { line = '[[ ! -r "$HOME/.config/dotfile/shell/.bashrc" ]] || source "$HOME/.config/dotfile/shell/.bashrc"' }
 "~/.zshrc/shell.zsh" = { line = '[[ ! -r "$HOME/.config/dotfile/shell/.zshrc" ]] || source "$HOME/.config/dotfile/shell/.zshrc"' }
 

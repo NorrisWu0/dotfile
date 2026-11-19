@@ -2,48 +2,28 @@
 
 ## Setup
 
+Install Git, curl, tmux, and a recent [mise](https://mise.jdx.dev/getting-started.html)
+with native dotfile support using your system's package manager first.
+
 ```bash
 git clone https://github.com/norriswu0/dotfile ~/git/norriswu0/dotfile
 cd ~/git/norriswu0/dotfile
-./setup-dotfile.sh
+mise trust ./mise.toml
+mise install
+mise dot status
+mise dot diff
+mise dot apply --dry-run
+mise dot apply --yes
+mise run herdr-plugins
 ```
 
-The menu shows each module's status and lets you select what to set up:
-
-- ✅ `synced`: all managed links and hooks are in place.
-- ⚠️ `drifted`: some settings are missing or point elsewhere.
-- ❌ `not-synced`: none of the module's settings are installed.
-- ❔ `unknown`: the module's status could not be determined.
-
-When `gum` is available in an interactive terminal, use arrows to move, `x` to
-select, Enter to confirm, and Esc to cancel. Otherwise, the numbered menu is
-used; `gum` is optional.
-
-Status checks managed links and profile hooks, not plugin installation or
-compatibility with a system upgrade. Linked files change immediately when
-edited in this repository.
-
-For non-interactive selection:
-
-```bash
-./setup-dotfile.sh --status                 # Status of every module
-./setup-dotfile.sh --module nvim --dry-run  # Preview one module
-./setup-dotfile.sh --module nvim            # Set up one module
-./setup-dotfile.sh --all --dry-run          # Preview all modules
-```
-
-`--module` can be repeated; `--all` selects every module. When the shell module
-is selected, setup asks whether to install missing system prerequisites: curl,
-git, tmux, and mise. It supports Omarchy/Arch and apt-based systems; the devbox
-already has mise's apt repository configured.
-`--dry-run` and `--status` never install tools or ask this question.
-
-The `agents`, `herdr`, `nvim`, `tmux`, and `shell` adapters delegate to mise's
-declarative dotfiles configuration. They refuse conflicting existing files,
-directories, and symlinks; review and move those aside yourself before applying.
-They never pass `--force`. Shell profile edits add only missing source lines,
-preserving existing settings. Shell's separate mise folder-fragment bootstrap
-also refuses conflicts.
+The root `mise.toml` is the only deployment configuration. There is no setup
+menu or adapter layer. Review `mise dot diff` and the dry-run before applying:
+native mise protects conflicting regular files and nonempty directories without
+`--force`, but can retarget an existing symlink. Move conflicting settings aside
+yourself rather than forcing replacement. Shell edits add only missing source
+lines, preserving existing settings and Omarchy defaults. Linked files change
+immediately when edited in this repository.
 
 | Package | Symlink |
 | --------- | --------- |
@@ -51,38 +31,34 @@ also refuses conflicts.
 | `tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
 | `herdr/config.toml` | `~/.config/herdr/config.toml` |
 | `agents/` | Shared instructions in `~/.config/opencode/AGENTS.md`, `~/.agents/AGENTS.md`, `~/.omp/agent/AGENTS.md`, and `~/.pi/agent/AGENTS.md`; skills in `~/.agents/skills`, `~/.config/opencode/skills`, `~/.pi/agent/skills`, and `~/.claude/skills` |
-| `pi/` | `~/.pi/agent/settings.json` + custom subagents in `~/.pi/agent/agents` |
+| `pi/` | Settings, custom subagents, and extensions in `~/.pi/agent/` |
 | `shell/` | `~/.config/dotfile/shell` (shell profiles source personal settings) |
-| Repository root | `~/.config/mise/conf.d/dotfile` (mise folder fragment, part of shell setup) |
+| `shell/ssh/devbox.conf` | `~/.ssh/config.d/devbox.conf` (included by SSH config on every machine) |
+| Repository root | `~/.config/mise/conf.d/dotfile` (global mise folder fragment) |
 
 OMP loads the shared instructions when a new default-profile session starts.
 OMP task subagents do not inherit `AGENTS.md`.
 
 ## Mise profiles
 
-The agent instruction/skill, Herdr, Neovim, tmux, and shell configuration links
-are declared only in the root `mise.toml` under `[dotfiles]`, with explicit
-`symlink` mode. The same table declares additive Bash and Zsh profile line edits.
-Install mise itself first, then install the pinned tools before applying profiles:
-
-```bash
-mise trust ./mise.toml
-mise install
-mise dot status
-mise dot apply --dry-run
-mise dot apply --yes
-mise run herdr-plugins
-```
+The agent instructions/skills, Pi settings/agents/extensions, Herdr, Neovim,
+tmux, and shell links use explicit native `symlink` entries. The same root
+configuration declares additive Bash and Zsh profile line edits and its own
+global registration.
 
 From elsewhere, use `mise -C ~/git/norriswu0/dotfile dot apply --yes` (and the
-same `-C` for status or tasks). The module menu still supports selecting just
-`agents`, `herdr`, `nvim`, `tmux`, or `shell`; these adapters discover their targets
-from mise, so they do not maintain a second inventory. Associated edits use
-module-prefixed IDs (for example, `shell.bash`) in the same declaring config.
-Herdr setup also synchronizes plugins after its config link is applied.
-Status describes managed links and edits, not plugin installation.
+same `-C` for status or tasks). To deploy or inspect just one target, name it:
 
-Shell setup registers the checkout directory as
+```bash
+mise -C ~/git/norriswu0/dotfile dot status ~/.config/nvim
+mise -C ~/git/norriswu0/dotfile dot apply --dry-run ~/.config/nvim
+mise -C ~/git/norriswu0/dotfile dot apply --yes ~/.config/nvim
+```
+
+Herdr plugin installation remains a separate substantive operation:
+`mise run herdr-plugins`. Dotfile status describes links and edits, not plugins.
+
+Native apply registers the checkout directory as
 `~/.config/mise/conf.d/dotfile`, a mise
 [folder fragment](https://mise.jdx.dev/configuration.html#conf-d-folders).
 The fragment loads its own `mise.toml` beside the source directories, so plain
@@ -90,12 +66,15 @@ relative dotfile sources work both globally and with `-C` inside the checkout.
 The plugin task canonicalizes `config_source` via `vars.dotfile_root` to find
 the physical checkout.
 
-Rerun `./shell/setup.sh --repo-path "$PWD"` to migrate the previous setup.
-It removes `~/.config/mise/config.toml` only if that file is a symlink resolving
-to this checkout's `mise.toml`. Independent global files and links remain
-untouched, and a conflicting `conf.d/dotfile` is refused rather than replaced.
-Do not set `MISE_GLOBAL_CONFIG_FILE` for this layout: that override disables
-global fragment discovery.
+Mise applies entries that deploy its own configuration first and reloads it
+in the same run. The directory fragment works both inside and outside the checkout;
+it does not replace an independent `~/.config/mise/config.toml`.
+If a previous setup linked that global file directly to this checkout's
+`mise.toml`, remove only that known obsolete link before applying (the devbox
+Ansible role migrates it automatically). Leave independent user files and links
+alone. A conflicting `conf.d/dotfile` is refused rather than replaced.
+Do not set `MISE_GLOBAL_CONFIG_FILE`: that override disables global fragment
+discovery.
 
 These declarations deploy repository files only. They do not track application
 history, sessions, caches, plugin installations, local configuration, credentials,
@@ -107,8 +86,8 @@ reruns. See mise's [dotfiles guide](https://mise.jdx.dev/dotfiles.html),
 ## OS-specific configuration
 
 Omarchy desktop files live under [`os/omarchy/`](os/omarchy/README.md).
-They are manual-only: the setup menu, `--all`, the legacy manifest, and mise
-profile deployment do not apply Hyprland, Waybar, or branding configuration.
+They are manual-only: native mise deployment does not apply Hyprland, Waybar,
+or branding configuration.
 Existing desktop symlinks must point to the relocated files.
 
 ## Shell
@@ -117,27 +96,49 @@ Mise links `shell/` to `~/.config/dotfile/shell` and ensures both `~/.bashrc` an
 `~/.zshrc` contain the corresponding source line. Existing profile contents and
 Omarchy defaults are preserved. The exact source lines from previous shell
 setup are reused, so migration and reruns do not duplicate them.
-`--dry-run` previews the link and both edits; `--status` checks all three plus
-the mise fragment. A profile symlink is refused rather than replaced or followed;
+`mise dot apply --dry-run` previews the link and edits; `mise dot status` inspects
+their state. A profile symlink is refused rather than replaced or followed;
 review it and move its contents to a regular profile before applying.
-Shell setup only bootstraps the mise folder fragment and retires the old global
-file link; mise owns shell deployment and profile editing. The legacy
-`noctlrc.yaml` manifest now registers only the fragment. Use shell setup for migration.
 
 Personal aliases live in `shell/alias.conf`. `shell/tools.conf` activates mise
 and initializes zoxide when needed. Mise replaces nvm for Node.js management.
 The `devbox` alias runs `ssh norris@devbox.hoki-sole.ts.net`; additional arguments
 are passed to SSH, for example `devbox hostname`. An existing user alias is kept.
 
+### Devbox SSH client
+
+The root mise configuration deploys `shell/ssh/devbox.conf` on every machine,
+including devbox itself. It links `~/.ssh/config.d/devbox.conf` and prepends
+`Include ~/.ssh/config.d/devbox.conf` to `~/.ssh/config`, preserving existing
+settings. The normal root apply is sufficient; there is no separate profile,
+selection file, or opt-in mode.
+
+To inspect or apply just these targets from the repository root:
+
+```bash
+mise dot apply --dry-run ~/.ssh/config.d/devbox.conf ~/.ssh/config/ssh.devbox
+mise dot apply --yes ~/.ssh/config.d/devbox.conf ~/.ssh/config/ssh.devbox
+```
+
+Review conflicting destinations or a symlinked SSH config instead of forcing
+replacement. Both `ssh devbox` and the `devbox` alias select Bitwarden's
+`~/.bitwarden-ssh-agent.sock` without an `SSH_AUTH_SOCK` export; other hosts
+keep their own authentication settings. To connect, install and connect
+Tailscale, enable Bitwarden Desktop's SSH agent, and unlock the vault containing
+your devbox key. Private keys stay in Bitwarden, and signing approval may still
+be required. Deploying this configuration does not install or unlock Bitwarden.
+
+### Personal tools
+
 The root `mise.toml` pins personal CLI tools and language runtimes to exact
-versions. Shell setup registers its containing folder as global configuration
-without replacing an independent `~/.config/mise/config.toml`.
+versions. Native dotfile apply registers its containing folder globally without
+replacing an independent `~/.config/mise/config.toml`.
 Project-specific `mise.toml` files can override these versions.
 
 The baseline also installs Herdr and the AI CLIs: Claude Code (`claude`),
 oh-my-pi (`omp`), and OpenCode (`opencode`).
 
-After shell setup, install the pinned tools:
+After native dotfile deployment, install or refresh the pinned tools:
 
 ```bash
 mise trust ./mise.toml
@@ -148,10 +149,6 @@ exec "$SHELL"
 Run `tools-check` (or `mise ls --current`) to see requested versions and which
 are missing. Git, SSH, Tailscale, and tmux remain system-managed; credentials
 stay outside the tool configuration.
-
-Each portable configuration directory owns a `setup.sh` adapter. The root setup
-script delegates to `nvim/setup.sh`, `tmux/setup.sh`, `herdr/setup.sh`,
-`agents/setup.sh`, `pi/setup.sh`, and `shell/setup.sh`.
 
 
 ## Tmux
@@ -169,31 +166,35 @@ Start or reload tmux, then press `Ctrl-Space` followed by `I` to install the con
 
 ## Herdr
 
-`herdr/config.toml` uses a `ctrl+space` prefix with tmux-style bindings (alt+arrows for workspace/tab nav, alt+enter/alt+shift+enter splits, ctrl+alt+arrows pane focus). Plugins are declared in `herdr/plugins.yaml` — add one trusted `owner/repo[/subdir]` per entry.
+`herdr/config.toml` uses a `ctrl+space` prefix with tmux-style bindings (alt+arrows for workspace/tab nav, alt+enter/alt+shift+enter splits, ctrl+alt+arrows pane focus). Plugins are declared in `herdr/plugins.yaml` as trusted `owner/repo[/subdir]@ref` entries. Pin published releases so their prebuilt installers do not require a compiler.
 
 Run `mise run herdr-plugins` to install missing plugins, or
 `bash herdr/sync-plugins.sh --dry-run` to preview the declarations without listing
 or installing plugins. The standalone script uses only `herdr plugin list --json`
-and `herdr plugin install <source> --yes`; it never starts, stops, or reloads a
-session. Already installed sources (including their subdirectory) are skipped.
+and `herdr plugin install <source> --yes --ref <ref>`; it never starts, stops, or
+reloads a session. Installed sources are skipped only when both subdirectory and
+requested ref match; changing a pin installs the requested release.
 Plugin listing and installation errors fail setup instead of reporting success.
 Missing `herdr`, `jq`, or Mike Farah's `yq` is an error; `mise install` supplies
 the pinned versions. Plugin config/state remain outside the repository.
 
-## Setup contract checks
+## Native deployment checks
 
-With mise, jq, and Mike Farah's yq available:
+With mise, OpenSSH, jq, and Mike Farah's yq available:
 
 ```bash
-mise exec -- bash tests/setup-adapters.sh
+mise exec -- bash tests/native-mise.sh
 mise exec -- bash tests/herdr-plugins.sh
 ```
 
-The adapter checks use an isolated home and mise state with the real mise CLI,
-including folder-fragment discovery, selective apply, reruns, old-file-link
-migration, exact legacy hook reuse, additive profile preservation, and conflict
-preservation. An interactive Bash startup check exercises the `devbox` alias with
-an SSH stub, including argument forwarding, without connecting to the host.
+The deployment checks use the real mise CLI with isolated HOME, XDG/mise
+directories, and ancestor-config discovery. They exercise dry-run behavior,
+declarative self-registration, global folder-fragment discovery, all common
+links (including Pi), rerun idempotence, additive shell preservation, and
+preservation of conflicting regular files, directories, linked profiles, and
+the data behind foreign symlinks.
+They also check default SSH deployment, preservation of SSH settings, and
+host-scoped authentication with real `ssh -G` configuration evaluation.
 The plugin checks exercise list/install behavior with a controlled Herdr
 executable; they do not install third-party code or touch running sessions.
 

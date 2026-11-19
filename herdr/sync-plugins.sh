@@ -40,17 +40,24 @@ if ! $dry_run; then
     installed="$(jq -ce '
         .result.plugins | if type != "array" then error("invalid Herdr plugin list response")
         else [.[] | .source | select(.kind == "github") |
-            [.owner, .repo, (.subdir // "")] | map(select(. != "")) | join("/")] end
+            ([.owner, .repo, (.subdir // "")] | map(select(. != "")) | join("/")) +
+            (if .requested_ref then "@" + .requested_ref else "" end)] end
     ' <<< "$inventory")"
 fi
 
 while IFS= read -r plugin; do
+    source="$plugin"
+    args=()
+    if [[ "$plugin" == *@* ]]; then
+        source="${plugin%@*}"
+        args=(--ref "${plugin##*@}")
+    fi
     if jq -e --arg source "$plugin" 'index($source) != null' <<< "$installed" >/dev/null; then
         printf 'Herdr plugin already installed: %s\n' "$plugin"
     elif $dry_run; then
         printf 'Would install Herdr plugin if missing: %s\n' "$plugin"
     else
-        if ! herdr plugin install "$plugin" --yes; then
+        if ! herdr plugin install "$source" --yes "${args[@]}"; then
             printf 'Failed to install Herdr plugin: %s\n' "$plugin" >&2
             exit 1
         fi

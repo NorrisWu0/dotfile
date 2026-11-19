@@ -9,7 +9,7 @@ mkdir -p "$work/bin" "$work/herdr"
 cp "$repo/herdr/sync-plugins.sh" "$work/herdr/sync-plugins.sh"
 cat > "$work/herdr/plugins.yaml" <<'YAML'
 plugins:
-  - example/plugins/one
+  - example/plugins/one@v1.2.3
 YAML
 cat > "$work/bin/herdr" <<'BASH'
 #!/usr/bin/env bash
@@ -22,10 +22,10 @@ case "$*" in
         esac
         cat "$PLUGIN_TEST_WORK/inventory.json"
         ;;
-    'plugin install example/plugins/one --yes')
+    'plugin install example/plugins/one --yes --ref v1.2.3')
         printf '%s\n' "$*" >> "$PLUGIN_TEST_WORK/calls"
         [[ "${FAKE_INSTALL:-}" != fail ]] || exit 1
-        jq '.result.plugins += [{source: {kind: "github", owner: "example", repo: "plugins", subdir: "one"}}]' \
+        jq '.result.plugins |= (map(select(.source.subdir != "one")) + [{source: {kind: "github", owner: "example", repo: "plugins", subdir: "one", requested_ref: "v1.2.3"}}])' \
             "$PLUGIN_TEST_WORK/inventory.json" > "$PLUGIN_TEST_WORK/new.json"
         mv "$PLUGIN_TEST_WORK/new.json" "$PLUGIN_TEST_WORK/inventory.json"
         ;;
@@ -35,8 +35,8 @@ BASH
 chmod +x "$work/bin/herdr"
 export PATH="$work/bin:$PATH"
 export PLUGIN_TEST_WORK="$work"
-# Another plugin from the same repo is not the requested subdirectory.
-printf '%s\n' '{"result":{"plugins":[{"source":{"kind":"github","owner":"example","repo":"plugins","subdir":"two"}}]}}' > "$work/inventory.json"
+# The requested plugin needs an upgrade; another subdirectory must be left alone.
+printf '%s\n' '{"result":{"plugins":[{"source":{"kind":"github","owner":"example","repo":"plugins","subdir":"one","requested_ref":"v1.0.0"}},{"source":{"kind":"github","owner":"example","repo":"plugins","subdir":"two"}}]}}' > "$work/inventory.json"
 
 output="$(bash "$work/herdr/sync-plugins.sh" --dry-run)"
 [[ ! -e "$work/calls" ]]
@@ -58,6 +58,7 @@ rm "$work/calls"
 
 output="$(bash "$work/herdr/sync-plugins.sh")"
 jq -e '[.result.plugins[].source.subdir] | sort == ["one", "two"]' "$work/inventory.json" >/dev/null
+jq -e '.result.plugins[] | select(.source.subdir == "one") | .source.requested_ref == "v1.2.3"' "$work/inventory.json" >/dev/null
 output="$(bash "$work/herdr/sync-plugins.sh")"
 [[ "$(wc -l < "$work/calls")" == 1 ]]
 

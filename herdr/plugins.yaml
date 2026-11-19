@@ -1,4 +1,4 @@
 # herdr plugins — declarative list, synced by mise run herdr-plugins
-# one "owner/repo[/subdir...]" per entry (as accepted by `herdr plugin install`)
+# one "owner/repo[/subdir...]@ref" per entry; refs pin published releases
 plugins:
-  - kryptamine/herdr-auto-title
+  - kryptamine/herdr-auto-title@v0.23.0
