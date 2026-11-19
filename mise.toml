@@ -23,26 +23,43 @@ opencode = "2.3.0"
 dotfile_root = "{{ config_source | canonicalize | dirname }}"
 
 [dotfiles]
+# Mise registration
 "~/.config/mise/conf.d/dotfile" = { source = ".", mode = "symlink" }
+
+# Agent instructions
 "~/.config/opencode/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
 "~/.omp/agent/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
 "~/.agents/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
 "~/.pi/agent/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
+
+# Agent skills
 "~/.config/opencode/skills" = { source = "agents/skills", mode = "symlink" }
 "~/.agents/skills" = { source = "agents/skills", mode = "symlink" }
 "~/.pi/agent/skills" = { source = "agents/skills", mode = "symlink" }
 "~/.claude/skills" = { source = "agents/skills", mode = "symlink" }
+
+# Pi profile
 "~/.pi/agent/settings.json" = { source = "pi/settings.json", mode = "symlink" }
 "~/.pi/agent/agents" = { source = "pi/agents", mode = "symlink" }
 "~/.pi/agent/extensions" = { source = "pi/extensions", mode = "symlink" }
+
+# Herdr
 "~/.config/herdr/config.toml" = { source = "herdr/config.toml", mode = "symlink" }
+
+# Neovim
 "~/.config/nvim" = { source = "nvim", mode = "symlink" }
+
+# Tmux
 "~/.config/tmux/tmux.conf" = { source = "tmux/tmux.conf", mode = "symlink" }
+
+# Shell files and startup hooks
 "~/.config/dotfile/shell" = { source = "shell", mode = "symlink" }
-"~/.ssh/config.d/devbox.conf" = { source = "shell/ssh/devbox.conf", mode = "symlink" }
-"~/.ssh/config/ssh.devbox" = { line = "Include ~/.ssh/config.d/devbox.conf", position = "prepend" }
 "~/.bashrc/shell.bash" = { line = '[[ ! -r "$HOME/.config/dotfile/shell/.bashrc" ]] || source "$HOME/.config/dotfile/shell/.bashrc"' }
 "~/.zshrc/shell.zsh" = { line = '[[ ! -r "$HOME/.config/dotfile/shell/.zshrc" ]] || source "$HOME/.config/dotfile/shell/.zshrc"' }
+
+# SSH client
+"~/.ssh/config.d/devbox.conf" = { source = "shell/ssh/devbox.conf", mode = "symlink" }
+"~/.ssh/config/ssh.devbox" = { line = "Include ~/.ssh/config.d/devbox.conf", position = "prepend" }
 
 [tasks.herdr-plugins]
 description = "Install missing plugins declared in herdr/plugins.yaml"
