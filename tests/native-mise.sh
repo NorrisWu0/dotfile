@@ -60,7 +60,7 @@ cp "$MISE_CONFIG_DIR/config.toml" "$work/global-original"
 # Dry-run must not register itself, deploy anything, or change existing profiles.
 "$mise" -C "$repo" dot apply --dry-run >"$work/dry-run.log"
 [[ ! -e "$MISE_CONFIG_DIR/conf.d/dotfile" && ! -L "$MISE_CONFIG_DIR/conf.d/dotfile" ]]
-[[ ! -e "$HOME/.config/nvim" && ! -e "$HOME/.pi/agent/settings.json" ]]
+[[ ! -e "$HOME/.config/nvim" && ! -e "$HOME/.config/opencode/opencode.json" ]]
 cmp -s "$HOME/.bashrc" "$work/bash-original"
 cmp -s "$HOME/.zshrc" "$work/zsh-original"
 cmp -s "$MISE_CONFIG_DIR/config.toml" "$work/global-original"
@@ -72,16 +72,9 @@ cmp -s "$HOME/.ssh/config" "$work/ssh-original"
 links=(
     '.config/mise/conf.d/dotfile|.'
     '.config/opencode/opencode.json|agents/opencode/opencode.json'
-    '.omp/agent/AGENTS.md|agents/AGENTS.md'
     '.agents/AGENTS.md|agents/AGENTS.md'
-    '.pi/agent/AGENTS.md|agents/AGENTS.md'
     '.agents/skills|agents/skills'
-    '.pi/agent/skills|agents/skills'
     '.claude/skills|agents/skills'
-    '.omp/agent/skills|agents/skills'
-    '.pi/agent/settings.json|pi/settings.json'
-    '.pi/agent/agents|pi/agents'
-    '.pi/agent/extensions|pi/extensions'
     '.config/herdr/config.toml|herdr/config.toml'
     '.config/nvim|nvim'
     '.config/tmux/tmux.conf|tmux/tmux.conf'
@@ -96,6 +89,7 @@ done
 [[ ! -e "$HOME/.config/opencode/AGENTS.md" && ! -L "$HOME/.config/opencode/AGENTS.md" ]]
 [[ ! -e "$HOME/.config/opencode/skills" && ! -L "$HOME/.config/opencode/skills" ]]
 cmp -s "$HOME/.config/opencode/opencode.json" "$repo/agents/opencode/opencode.json"
+[[ ! -e "$HOME/.pi" && ! -e "$HOME/.omp" ]]
 cmp -s "$HOME/.bashrc" "$work/bash-original"
 cmp -s "$HOME/.zshrc" "$work/zsh-expected"
 cmp -s "$MISE_CONFIG_DIR/config.toml" "$work/global-original"

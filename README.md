@@ -31,14 +31,10 @@ immediately when edited in this repository.
 | `tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
 | `herdr/config.toml` | `~/.config/herdr/config.toml` |
 | `agents/opencode/opencode.json` | `~/.config/opencode/opencode.json` (remote instructions and skills) |
-| `agents/` | Shared instructions in `~/.agents/AGENTS.md`, `~/.omp/agent/AGENTS.md`, and `~/.pi/agent/AGENTS.md`; skills in `~/.agents/skills`, `~/.pi/agent/skills`, `~/.claude/skills`, and `~/.omp/agent/skills` |
-| `pi/` | Settings, custom subagents, and extensions in `~/.pi/agent/` |
+| `agents/` | Shared instructions in `~/.agents/AGENTS.md`; skills in `~/.agents/skills` and `~/.claude/skills` |
 | `shell/` | `~/.config/dotfile/shell` (shell profiles source personal settings) |
 | `shell/ssh/devbox.conf` | `~/.ssh/config.d/devbox.conf` (included by SSH config on every machine) |
 | Repository root | `~/.config/mise/conf.d/dotfile` (global mise folder fragment) |
-
-OMP loads the shared instructions when a new default-profile session starts.
-OMP task subagents do not inherit `AGENTS.md`.
 
 OpenCode's application settings are tracked separately from terminal preferences
 (`cli.json`), credentials, and runtime data. The shared `~/.agents/skills` link
@@ -46,7 +42,7 @@ remains available to agents that discover it; remote skills are not exclusive.
 
 ## Mise profiles
 
-The agent instructions/skills, Pi settings/agents/extensions, Herdr, Neovim,
+The agent instructions/skills, OpenCode settings, Herdr, Neovim,
 tmux, and shell links use explicit native `symlink` entries. The same root
 configuration declares additive Bash and Zsh profile line edits and its own
 global registration.
@@ -140,8 +136,8 @@ versions. Native dotfile apply registers its containing folder globally without
 replacing an independent `~/.config/mise/config.toml`.
 Project-specific `mise.toml` files can override these versions.
 
-The baseline also installs Herdr and the AI CLIs: Claude Code (`claude`),
-oh-my-pi (`omp`), and OpenCode (`opencode`).
+The baseline also installs Herdr and the AI CLIs: Claude Code (`claude`)
+and OpenCode (`opencode`).
 
 After native dotfile deployment, install or refresh the pinned tools:
 
@@ -195,7 +191,7 @@ mise exec -- bash tests/herdr-plugins.sh
 The deployment checks use the real mise CLI with isolated HOME, XDG/mise
 directories, and ancestor-config discovery. They exercise dry-run behavior,
 declarative self-registration, global folder-fragment discovery, all common
-links (including Pi), rerun idempotence, additive shell preservation, and
+links, rerun idempotence, additive shell preservation, and
 preservation of conflicting regular files, directories, linked profiles, and
 the data behind foreign symlinks.
 They also check default SSH deployment, preservation of SSH settings, and

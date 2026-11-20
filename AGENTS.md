@@ -11,8 +11,7 @@ Personal dotfiles for an Omarchy (Arch + Hyprland) machine. Configuration is dep
 
 ## Directory ownership
 
-- `agents/` — shared AI agent instructions and skills, linked into OpenCode, OMP, Pi, and `~/.agents/`.
-- `pi/` — Pi settings and custom subagent definitions, linked into `~/.pi/agent/`.
+- `agents/` — shared AI agent instructions and skills linked into `~/.agents/` and `~/.claude/skills`, plus OpenCode settings linked into `~/.config/opencode/opencode.json`.
 - `hypr/` — Hyprland config. `hypr/monitors.lua` is gitignored on purpose (per-device); never commit it.
 - `waybar/` — custom waybar; `indicators/scratchpad-listener.sh` is a background daemon (needs `socat` + a live Hyprland session; setup script skips it otherwise). Restart waybar with `omarchy-restart-waybar`. Omarchy upstream defaults live at `~/.local/share/omarchy/config/waybar/` — diff against them after `omarchy-update`.
 - `nvim/` — LazyVim config. `lazy-lock.json` is a plugin lockfile managed by lazy.nvim; don't hand-edit.

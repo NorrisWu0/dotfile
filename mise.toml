@@ -18,7 +18,6 @@ opentofu = "1.13.9"
 infisical = { version = "0.45.4", asset_pattern = "cli_{{ version }}_{{ os(macos='darwin') }}_{{ arch(x64='amd64') }}.tar.gz" }
 herdr = "0.9.5"
 claude-code = "2.1.325"
-oh-my-pi = "18.20.2"
 opencode = "2.3.0"
 
 [vars]
@@ -33,20 +32,11 @@ dotfile_root = "{{ config_source | canonicalize | dirname }}"
 "~/.config/opencode/opencode.json" = { source = "agents/opencode/opencode.json", mode = "symlink" }
 
 # Agent instructions
-"~/.omp/agent/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
 "~/.agents/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
-"~/.pi/agent/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
 
 # Agent skills
 "~/.agents/skills" = { source = "agents/skills", mode = "symlink" }
-"~/.pi/agent/skills" = { source = "agents/skills", mode = "symlink" }
 "~/.claude/skills" = { source = "agents/skills", mode = "symlink" }
-"~/.omp/agent/skills" = { source = "agents/skills", mode = "symlink" }
-
-# Pi profile
-"~/.pi/agent/settings.json" = { source = "pi/settings.json", mode = "symlink" }
-"~/.pi/agent/agents" = { source = "pi/agents", mode = "symlink" }
-"~/.pi/agent/extensions" = { source = "pi/extensions", mode = "symlink" }
 
 # Herdr
 "~/.config/herdr/config.toml" = { source = "herdr/config.toml", mode = "symlink" }
