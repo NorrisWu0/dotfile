@@ -29,14 +29,15 @@ dotfile_root = "{{ config_source | canonicalize | dirname }}"
 # Mise registration
 "~/.config/mise/conf.d/dotfile" = { source = ".", mode = "symlink" }
 
+# OpenCode
+"~/.config/opencode/opencode.json" = { source = "agents/opencode/opencode.json", mode = "symlink" }
+
 # Agent instructions
-"~/.config/opencode/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
 "~/.omp/agent/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
 "~/.agents/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
 "~/.pi/agent/AGENTS.md" = { source = "agents/AGENTS.md", mode = "symlink" }
 
 # Agent skills
-"~/.config/opencode/skills" = { source = "agents/skills", mode = "symlink" }
 "~/.agents/skills" = { source = "agents/skills", mode = "symlink" }
 "~/.pi/agent/skills" = { source = "agents/skills", mode = "symlink" }
 "~/.claude/skills" = { source = "agents/skills", mode = "symlink" }

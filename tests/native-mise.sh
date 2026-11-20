@@ -71,11 +71,10 @@ cmp -s "$HOME/.ssh/config" "$work/ssh-original"
 "$mise" -C "$repo" dot apply --yes
 links=(
     '.config/mise/conf.d/dotfile|.'
-    '.config/opencode/AGENTS.md|agents/AGENTS.md'
+    '.config/opencode/opencode.json|agents/opencode/opencode.json'
     '.omp/agent/AGENTS.md|agents/AGENTS.md'
     '.agents/AGENTS.md|agents/AGENTS.md'
     '.pi/agent/AGENTS.md|agents/AGENTS.md'
-    '.config/opencode/skills|agents/skills'
     '.agents/skills|agents/skills'
     '.pi/agent/skills|agents/skills'
     '.claude/skills|agents/skills'
@@ -94,6 +93,9 @@ for entry in "${links[@]}"; do
     source="$repo/${entry#*|}"
     [[ -L "$target" && "$(realpath "$target")" == "$(realpath "$source")" ]]
 done
+[[ ! -e "$HOME/.config/opencode/AGENTS.md" && ! -L "$HOME/.config/opencode/AGENTS.md" ]]
+[[ ! -e "$HOME/.config/opencode/skills" && ! -L "$HOME/.config/opencode/skills" ]]
+cmp -s "$HOME/.config/opencode/opencode.json" "$repo/agents/opencode/opencode.json"
 cmp -s "$HOME/.bashrc" "$work/bash-original"
 cmp -s "$HOME/.zshrc" "$work/zsh-expected"
 cmp -s "$MISE_CONFIG_DIR/config.toml" "$work/global-original"
@@ -102,8 +104,8 @@ cmp -s "$HOME/.ssh/config" "$work/ssh-expected"
 
 # Outside the checkout, only the registered folder fragment supplies this inventory.
 inventory="$("$mise" -C "$work" dot status --json)"
-jq -e '
-    (.files | length) == 18 and (.edits | length) == 3 and
+jq -e --argjson files "${#links[@]}" '
+    (.files | length) == $files and (.edits | length) == 3 and
     all(.files[]; .mode == "symlink" and .state == "applied") and
     all(.edits[]; .state == "applied")
 ' <<<"$inventory" >/dev/null

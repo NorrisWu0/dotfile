@@ -30,7 +30,8 @@ immediately when edited in this repository.
 | `nvim/` | `~/.config/nvim` |
 | `tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
 | `herdr/config.toml` | `~/.config/herdr/config.toml` |
-| `agents/` | Shared instructions in `~/.config/opencode/AGENTS.md`, `~/.agents/AGENTS.md`, `~/.omp/agent/AGENTS.md`, and `~/.pi/agent/AGENTS.md`; skills in `~/.agents/skills`, `~/.config/opencode/skills`, `~/.pi/agent/skills`, `~/.claude/skills`, and `~/.omp/agent/skills` |
+| `agents/opencode/opencode.json` | `~/.config/opencode/opencode.json` (remote instructions and skills) |
+| `agents/` | Shared instructions in `~/.agents/AGENTS.md`, `~/.omp/agent/AGENTS.md`, and `~/.pi/agent/AGENTS.md`; skills in `~/.agents/skills`, `~/.pi/agent/skills`, `~/.claude/skills`, and `~/.omp/agent/skills` |
 | `pi/` | Settings, custom subagents, and extensions in `~/.pi/agent/` |
 | `shell/` | `~/.config/dotfile/shell` (shell profiles source personal settings) |
 | `shell/ssh/devbox.conf` | `~/.ssh/config.d/devbox.conf` (included by SSH config on every machine) |
@@ -38,6 +39,10 @@ immediately when edited in this repository.
 
 OMP loads the shared instructions when a new default-profile session starts.
 OMP task subagents do not inherit `AGENTS.md`.
+
+OpenCode's application settings are tracked separately from terminal preferences
+(`cli.json`), credentials, and runtime data. The shared `~/.agents/skills` link
+remains available to agents that discover it; remote skills are not exclusive.
 
 ## Mise profiles
 
