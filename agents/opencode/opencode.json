@@ -4,5 +4,13 @@
   "skills": [
     "https://raw.githubusercontent.com/nori-cloud/agents/main/plugins/nori/skills/",
     "https://raw.githubusercontent.com/nori-cloud/actions/main/skills/"
-  ]
+  ],
+  "mcp": {
+    "servers": {
+      "kubernetes-readonly": {
+        "type": "remote",
+        "url": "https://kubernetes-readonly-mcp.hoki-sole.ts.net/mcp"
+      }
+    }
+  }
 }
