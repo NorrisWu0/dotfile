@@ -139,6 +139,11 @@ Project-specific `mise.toml` files can override these versions.
 The baseline also installs Herdr and the AI CLIs: Claude Code (`claude`)
 and OpenCode (`opencode`).
 
+Neovim gets Go and TypeScript language servers from the LazyVim `lang.go` and
+`lang.typescript` extras (`nvim/lazyvim.json`). Mason installs `gopls`, `vtsls`
+and their formatters on first launch. Go is pinned here because Mason builds
+`gopls` with it.
+
 After native dotfile deployment, install or refresh the pinned tools:
 
 ```bash
