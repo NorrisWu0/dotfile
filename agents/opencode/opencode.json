@@ -12,6 +12,10 @@
       "kubernetes-readonly": {
         "type": "remote",
         "url": "https://kubernetes-readonly-mcp.hoki-sole.ts.net/mcp"
+      },
+      "temporal-mcp": {
+        "type": "remote",
+        "url": "https://temporal.mcp.kapa.ai"
       }
     }
   }
