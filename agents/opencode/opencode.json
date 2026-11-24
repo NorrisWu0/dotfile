@@ -1,6 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "instructions": ["https://raw.githubusercontent.com/nori-cloud/agents/main/instructions/AGENTS.md"],
+  "instructions": [
+    "https://raw.githubusercontent.com/nori-cloud/agents/main/instructions/AGENTS.md"
+  ],
   "skills": [
     "https://raw.githubusercontent.com/nori-cloud/agents/main/skills/",
     "https://raw.githubusercontent.com/nori-cloud/actions/main/skills/"
